@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { Search, ShoppingCart, User, MapPin, ChevronDown, TrendingUp, X } from 'lucide-react';
 import LoginModal from './LoginModal';
 import axiosInstance from '../instant/axios';
-import { globalSearch } from '../page/Api';
+import { globalSearch, getMyProfile } from '../page/Api';
 
 
 export default function UrbanCompanyHeader() {
@@ -45,7 +45,6 @@ export default function UrbanCompanyHeader() {
     { name: 'Bangalore', state: 'Karnataka, India', city: 'Bangalore' }
   ];
 
-
   useEffect(() => {
     const savedLocation = localStorage.getItem('userLocation');
     const savedCity = localStorage.getItem('userCity');
@@ -56,40 +55,62 @@ export default function UrbanCompanyHeader() {
     }
   }, []);
 
-
   useEffect(() => {
     const saved = JSON.parse(sessionStorage.getItem('recentSearches') || '[]');
     setRecentSearches(saved);
   }, []);
 
-
+  
   useEffect(() => {
-    const checkAuth = () => {
+    const fetchProfileFromAPI = async () => {
       const token = localStorage.getItem('authToken');
-      const user = localStorage.getItem('user');
 
-      console.log(' Checking auth on load...');
-      console.log('Token exists:', !!token);
-      console.log('User exists:', !!user);
+      console.log(' Checking auth token...');
+      // console.log('Token exists:', !!token);
 
-      if (token && user) {
-        try {
-          const parsedUser = JSON.parse(user);
+      if (!token) {
+        // console.log(' No token found - User not logged in');
+        setIsLoggedIn(false);
+        setUserData(null);
+        return;
+      }
+
+      try {
+        // console.log(' Fetching user profile from API...');
+        // console.log('API Endpoint: GET /auth/me');
+        
+        const response = await getMyProfile();
+        
+        // console.log(' API Response:', response);
+
+        if (response.success && response.data) {
+          // console.log(' Profile fetched successfully');
+          // console.log('User Name:', response.data.name);
+          // console.log('User Phone:', response.data.phone);
+          // console.log('User Email:', response.data.email);
+          
           setIsLoggedIn(true);
-          setUserData(parsedUser);
+          setUserData(response.data);
+          
+          
           fetchCartCount();
-          console.log(' User logged in:', parsedUser.name);
-        } catch (error) {
-          console.error(' Error parsing user data:', error);
-          localStorage.removeItem('authToken');
-          localStorage.removeItem('user');
+        } else {
+          // console.log(' API returned success: false');
+          throw new Error('Profile fetch failed');
         }
-      } else {
-        console.log(' No auth data found');
+      } catch (error) {
+        // console.error(' API Error:', error);
+        // console.log('Logging out user due to API error');
+        
+        // logout
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('user');
+        setIsLoggedIn(false);
+        setUserData(null);
       }
     };
 
-    checkAuth();
+    fetchProfileFromAPI();
   }, []);
 
   //  FETCH CART COUNT
@@ -167,9 +188,7 @@ export default function UrbanCompanyHeader() {
     setIsSearching(true);
 
     try {
-      // Using globalSearch from api.js with city filter
       const response = await globalSearch(query, currentCity);
-
       console.log(' Search results for', query, 'in', currentCity, ':', response);
 
       if (response && response.success) {
@@ -207,10 +226,9 @@ export default function UrbanCompanyHeader() {
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
-        console.log(' Got coordinates:', latitude, longitude);
+        // console.log(' Got coordinates:', latitude, longitude);
 
         try {
-          //  Reverse geocoding using OpenStreetMap Nominatim API (Free)
           const response = await fetch(
             `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
           );
@@ -225,13 +243,11 @@ export default function UrbanCompanyHeader() {
           setLocation(locationText);
           setCurrentCity(city);
 
-          // Save to localStorage
           localStorage.setItem('userLocation', locationText);
           localStorage.setItem('userCity', city);
 
           setShowLocationModal(false);
 
-          // Show success toast
           setShowToast(true);
           setTimeout(() => setShowToast(false), 2000);
         } catch (error) {
@@ -256,36 +272,57 @@ export default function UrbanCompanyHeader() {
     setLocation(loc.name + ', ' + loc.state.split(',')[0]);
     setCurrentCity(loc.city);
 
-
     localStorage.setItem('userLocation', loc.name + ', ' + loc.state.split(',')[0]);
     localStorage.setItem('userCity', loc.city);
 
     setShowLocationModal(false);
   };
 
-  const handleLoginSuccess = () => {
-    const user = localStorage.getItem('user');
-    if (user) {
-      setIsLoggedIn(true);
-      setUserData(JSON.parse(user));
-      fetchCartCount();
+  //  LOGIN SUCCESS - SIRF API SE DATA
+  const handleLoginSuccess = async () => {
+    try {
+      console.log('📡 Fetching fresh profile after login...');
+      console.log('API Endpoint: GET /auth/me');
+      
+      const response = await getMyProfile();
+      
+      console.log('API Response after login:', response);
+
+      if (response.success && response.data) {
+        console.log(' Profile updated after login');
+        console.log('User Name:', response.data.name);
+        console.log('User Phone:', response.data.phone);
+        
+        setIsLoggedIn(true);
+        setUserData(response.data);
+        fetchCartCount();
+      } else {
+        throw new Error('Profile fetch failed after login');
+      }
+    } catch (error) {
+      console.error('Error fetching profile after login:', error);
+      console.log('Logging out due to API error');
+      
+      // API fail = logout
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('user');
+      setIsLoggedIn(false);
+      setUserData(null);
     }
+    
     setShowToast(true);
-    setTimeout(() => {
-      setShowToast(false);
-    }, 3000);
+    setTimeout(() => setShowToast(false), 3000);
   };
 
-
   const handleLogout = () => {
-    console.log(' Logging out...');
+    console.log('🚪 Logging out...');
     localStorage.removeItem('authToken');
     localStorage.removeItem('user');
     setIsLoggedIn(false);
     setUserData(null);
     setShowUserMenu(false);
     setCartCount(0);
-    console.log('Logout successful');
+    console.log(' Logout successful');
   };
 
   return (
@@ -303,7 +340,6 @@ export default function UrbanCompanyHeader() {
                   />
                 </NavLink>
               </div>
-
 
               <nav className="hidden md:flex items-center gap-8 pl-6">
                 <NavLink
@@ -348,7 +384,6 @@ export default function UrbanCompanyHeader() {
                   <ChevronDown className="w-4 h-4 text-gray-600" />
                 </button>
 
-
                 <div className="hidden lg:flex items-center gap-2 px-4 py-3 border border-gray-300 rounded-lg bg-white w-80 relative search-wrapper">
                   <Search className="w-4 h-4 text-gray-400" />
                   <input
@@ -365,7 +400,6 @@ export default function UrbanCompanyHeader() {
                     </button>
                   )}
 
-                  
                   {showSearchDropdown && (
                     <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-xl border border-gray-200 max-h-[320px] z-50 search-dropdown">
                       {!searchQuery ? (
@@ -464,7 +498,6 @@ export default function UrbanCompanyHeader() {
                 </div>
               </div>
 
-
               <NavLink to="/cart">
                 <button className="relative p-2 hover:bg-gray-100 rounded-full border-gray-200 border border-2 transition-colors">
                   <ShoppingCart className="w-5 h-5 text-gray-700" />
@@ -475,7 +508,6 @@ export default function UrbanCompanyHeader() {
                   )}
                 </button>
               </NavLink>
-
 
               <div className="relative user-menu-wrapper">
                 <button
@@ -526,13 +558,11 @@ export default function UrbanCompanyHeader() {
         </div>
       </header>
 
-
       <LoginModal
         isOpen={showLoginModal}
         onClose={() => setShowLoginModal(false)}
         onLoginSuccess={handleLoginSuccess}
       />
-
 
       {showLocationModal && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center px-4">
@@ -609,7 +639,6 @@ export default function UrbanCompanyHeader() {
         </div>
       )}
 
-      {/* TOAST */}
       {showToast && (
         <div className="fixed top-20 right-4 z-[60] animate-slide-in">
           <div className="bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3">

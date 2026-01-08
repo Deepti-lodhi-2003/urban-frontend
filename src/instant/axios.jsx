@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-// Create axios instance
 const axiosInstance = axios.create({
   baseURL: 'https://backend-urbancompany-1.onrender.com/api',
   timeout: 10000,
@@ -9,7 +8,7 @@ const axiosInstance = axios.create({
   }
 });
 
-// Request interceptor - token add karne ke liye
+
 axiosInstance.interceptors.request.use(
   (config) => {
   
@@ -28,7 +27,7 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-// Response interceptor - error handling ke liye
+
 axiosInstance.interceptors.response.use(
   (response) => {
     console.log(' Response received:', response.config.url);
@@ -36,7 +35,7 @@ axiosInstance.interceptors.response.use(
   },
   (error) => {
     if (error.response) {
-      // Server ne response diya but error hai
+     
       const { status, data } = error.response;
       
       console.error(' Response error:', status, data);
@@ -50,14 +49,14 @@ axiosInstance.interceptors.response.use(
         return Promise.reject('Session expired. Please login again.');
       }
       
-      // Error message return karo
+    
       return Promise.reject(data.message || 'Something went wrong');
     } else if (error.request) {
-      // Request bheja but response nahi aaya
+    
       console.error('Network error:', error.request);
       return Promise.reject('Network error. Please check your connection.');
     } else {
-      // Kuch aur error
+     
       console.error(' Error:', error.message);
       return Promise.reject(error.message || 'Something went wrong');
     }

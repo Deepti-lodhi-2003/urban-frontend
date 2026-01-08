@@ -48,7 +48,7 @@ export default function Slider() {
       setError(null);
       const response = await fetchCategories();
       
-      console.log(' API Response:', response); 
+      // console.log(' API Response:', response); 
       
       if (response.success && response.data) {
         const activeCategories = response.data
@@ -57,16 +57,16 @@ export default function Slider() {
         
         console.log(' Active Categories:', activeCategories);
         
-        // Log image URLs to debug
+        
         activeCategories.forEach(cat => {
-          console.log(`📷 ${cat.name}:`, cat.image, '→', getImageUrl(cat.image));
+          // console.log(`📷 ${cat.name}:`, cat.image, '→', getImageUrl(cat.image));
         });
         
         setCategories(activeCategories);
       }
     } catch (err) {
       setError(err.message || 'Failed to load categories');
-      console.error(' Error loading categories:', err);
+      // console.error(' Error loading categories:', err);
     } finally {
       setLoading(false);
     }
@@ -97,7 +97,7 @@ export default function Slider() {
     return visible;
   };
 
-  // Loading State
+
   if (loading) {
     return (
       <div className="w-full bg-white lg:py-8 px-4">
@@ -113,7 +113,7 @@ export default function Slider() {
     );
   }
 
-  // Error State
+
   if (error) {
     return (
       <div className="w-full bg-white lg:py-8 px-4">
@@ -139,7 +139,7 @@ export default function Slider() {
     );
   }
 
-  // Empty State
+
   if (categories.length === 0) {
     return (
       <div className="w-full bg-white lg:py-8 px-4">
@@ -163,7 +163,7 @@ export default function Slider() {
         </div>
         
         <div className="relative">
-          {/* Left Arrow */}
+     
           {currentIndex > 0 && (
             <button
               onClick={prevSlide}
@@ -174,7 +174,7 @@ export default function Slider() {
             </button>
           )}
 
-          {/* Slides Container */}
+       
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {getVisibleSlides().map((category, idx) => (
               <div
@@ -200,7 +200,7 @@ export default function Slider() {
                     }}
                   />
                   
-                  {/* Category Name Overlay */}
+                  
                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
                     <h3 className="text-white font-semibold text-lg">
                       {category.name}
@@ -216,7 +216,7 @@ export default function Slider() {
             ))}
           </div>
 
-          {/* Right Arrow */}
+        
           {currentIndex < categories.length - (isMobile ? 1 : 3) && (
             <button
               onClick={nextSlide}
@@ -228,7 +228,7 @@ export default function Slider() {
           )}
         </div>
 
-        {/* Dots Indicator */}
+        
         {categories.length > (isMobile ? 1 : 3) && (
           <div className="flex justify-center gap-2 mt-6">
             {Array.from({ 

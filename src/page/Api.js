@@ -119,7 +119,7 @@ export const fetchServices = async (options = {}) => {
     };
 
     const response = await api.get('/services', { params });
-    console.log('Services fetched:', response);
+    // console.log('Services fetched:', response);
     return response;
   } catch (error) {
     console.error('Error fetching services:', error);
