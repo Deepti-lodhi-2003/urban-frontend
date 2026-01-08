@@ -85,7 +85,6 @@ export default function Details() {
         };
     }, [serviceId]);
 
-
     const checkLoginStatus = () => {
         const token = localStorage.getItem('authToken');
         const loggedIn = !!token;
@@ -99,81 +98,81 @@ export default function Details() {
     };
 
     const loadServices = async () => {
-        try {
-            setLoadingServices(true);
-            const response = await fetchServices({
-                page: 1,
-                limit: 100,
-            });
+    try {
+        setLoadingServices(true);
+        const response = await fetchServices({
+            page: 1,
+            limit: 100,
+        });
 
-            if (response.success && response.data.services) {
-                const allServices = response.data.services;
+        if (response.success && response.data.services) {
+            const allServices = response.data.services;
 
-                if (serviceId) {
-                    const foundService = allServices.find(s => s._id === serviceId);
-                    if (foundService) {
-                        setCurrentService({
-                            id: foundService._id,
-                            name: foundService.name,
-                            rating: foundService.rating || 4.80,
-                            totalBookings: foundService.totalReviews || 312,
-                            category: foundService.category?.name || 'Services',
-                            categoryId: foundService.category?._id,
-                            images: foundService.images || [],
-                            description: foundService.description || '',
-                            video: foundService.video || null
-                        });
+            if (serviceId) {
+                const foundService = allServices.find(s => s._id === serviceId);
+                if (foundService) {
+                    setCurrentService({
+                        id: foundService._id,
+                        name: foundService.name,
+                        rating: foundService.rating || 4.80,
+                        totalBookings: foundService.totalReviews || 312,
+                        category: foundService.category?.name || 'Services',
+                        categoryId: foundService.category?._id,
+                        images: foundService.images || [],
+                        description: foundService.description || '',
+                        video: foundService.video || null  
+                    });
 
-                        const sameCategoryServices = allServices.filter(s =>
-                            s.category?._id === foundService.category?._id
-                        );
+                    const sameCategoryServices = allServices.filter(s =>
+                        s.category?._id === foundService.category?._id
+                    );
 
-                        const related = sameCategoryServices
-                            .filter(s => s._id !== foundService._id)
-                            .slice(0, 5)
-                            .map(s => ({
-                                label: s.name,
-                                image: s.images && s.images.length > 0
-                                    ? (s.images[0].startsWith('http')
-                                        ? s.images[0]
-                                        : `https://backend-urbancompany-1.onrender.com${s.images[0]}`)
-                                    : 'https://via.placeholder.com/64',
-                                id: s._id
-                            }));
-
-                        setRelatedServices(related);
-
-                        const formattedCategoryServices = sameCategoryServices.map(service => ({
-                            id: service._id,
-                            name: service.name,
-                            rating: service.rating || 4.5,
-                            reviews: service.totalReviews ? `${(service.totalReviews / 1000).toFixed(1)}K` : '0',
-                            price: service.price,
-                            discountPrice: service.discountPrice,
-                            description: service.description,
-                            image: service.images && service.images.length > 0
-                                ? (service.images[0].startsWith('http')
-                                    ? service.images[0]
-                                    : `https://backend-urbancompany-1.onrender.com${service.images[0]}`)
-                                : 'https://via.placeholder.com/150',
-                            duration: service.duration
+                    const related = sameCategoryServices
+                        .filter(s => s._id !== foundService._id)
+                        .slice(0, 5)
+                        .map(s => ({
+                            label: s.name,
+                            image: s.images && s.images.length > 0
+                                ? (s.images[0].startsWith('http')
+                                    ? s.images[0]
+                                    : `https://backend-urbancompany-1.onrender.com${s.images[0]}`)
+                                : 'https://via.placeholder.com/64',
+                            id: s._id
                         }));
 
-                        setCategoryServices(formattedCategoryServices);
+                    setRelatedServices(related);
 
-                        // ✅ Store current page service IDs
-                        const pageServiceIds = formattedCategoryServices.map(s => s.id);
-                        setCurrentPageServiceIds(pageServiceIds);
-                        console.log('📦 Current page service IDs:', pageServiceIds);
-                    }
+                    const formattedCategoryServices = sameCategoryServices.map(service => ({
+                        id: service._id,
+                        name: service.name,
+                        rating: service.rating || 4.5,
+                        reviews: service.totalReviews ? `${(service.totalReviews / 1000).toFixed(1)}K` : '0',
+                        price: service.price,
+                        discountPrice: service.discountPrice,
+                        description: service.description,
+                        image: service.images && service.images.length > 0
+                            ? (service.images[0].startsWith('http')
+                                ? service.images[0]
+                                : `https://backend-urbancompany-1.onrender.com${service.images[0]}`)
+                            : 'https://via.placeholder.com/150',
+                        duration: service.duration,
+                        video: service.video || null 
+                    }));
+
+                    setCategoryServices(formattedCategoryServices);
+
+                    const pageServiceIds = formattedCategoryServices.map(s => s.id);
+                    setCurrentPageServiceIds(pageServiceIds);
+                    console.log(' Current page service IDs:', pageServiceIds);
                 }
             }
-        } catch (error) {
-            console.error('Error loading services:', error);
-        } finally {
-            setLoadingServices(false);
         }
-    };
+    } catch (error) {
+        console.error('Error loading services:', error);
+    } finally {
+        setLoadingServices(false);
+    }
+};
 
     const handleServiceClick = (serviceId) => {
         const service = [...relatedServices].find(s => s.id === serviceId);
@@ -188,19 +187,19 @@ export default function Details() {
         try {
             const token = localStorage.getItem('authToken');
             if (!token) {
-                console.log('📦 No token found, cart set to null');
+                console.log('No token found, cart set to null');
                 setCart(null);
                 return;
             }
 
             const response = await getCart();
             if (response.success) {
-                console.log('📦 Full cart loaded:', response.data);
+                console.log('Full cart loaded:', response.data);
                 setCart(response.data);
                 window.dispatchEvent(new CustomEvent('cartUpdated'));
             }
         } catch (error) {
-            console.error('❌ Error loading cart:', error);
+            console.error('Error loading cart:', error);
         }
     };
 
@@ -221,37 +220,27 @@ export default function Details() {
     const handleAddToCart = async (serviceId) => {
         const token = localStorage.getItem('authToken');
 
-        console.log('🛒 Add to Cart clicked:', {
-            serviceId,
-            hasToken: !!token,
-            isLoggedInState: isLoggedIn,
-            tokenPreview: token ? `${token.substring(0, 20)}...` : 'none'
-        });
-
         if (!token) {
-            console.log('❌ No token found - showing login modal');
             setShowLoginModal(true);
             return;
         }
 
-        console.log('✅ Token found - proceeding to add to cart');
-        setLoading(true);
+        setLoadingItems(prev => ({ ...prev, [serviceId]: true }));
 
         try {
             const response = await addToCart(serviceId, 1);
 
             if (response.success) {
-                console.log('✅ Item added to cart successfully');
                 await loadCart();
                 showNotification('Item added to cart successfully!', 'success');
             } else {
                 throw new Error(response.message || 'Failed to add item to cart');
             }
         } catch (error) {
-            console.error('❌ Error adding to cart:', error);
+            console.error('Error adding to cart:', error);
             showNotification(error.message || 'Failed to add item to cart', 'error');
         } finally {
-            setLoading(false);
+            setLoadingItems(prev => ({ ...prev, [serviceId]: false }));
         }
     };
 
@@ -268,7 +257,7 @@ export default function Details() {
             return;
         }
 
-        setLoading(true);
+        setLoadingItems(prev => ({ ...prev, [serviceId]: true }));
         try {
             const response = await updateCartItem(serviceId, newQuantity);
             if (response.success) {
@@ -278,7 +267,7 @@ export default function Details() {
             console.error('Error updating cart:', error);
             showNotification('Failed to update quantity', 'error');
         } finally {
-            setLoading(false);
+            setLoadingItems(prev => ({ ...prev, [serviceId]: false }));
         }
     };
 
@@ -288,7 +277,6 @@ export default function Details() {
         return item ? item.quantity : 0;
     };
 
-    // ✅ Filter cart items - only current page services
     const getCurrentPageCartItems = () => {
         if (!cart || !cart.items) return [];
 
@@ -296,20 +284,16 @@ export default function Details() {
             currentPageServiceIds.includes(item.service._id)
         );
 
-        console.log('🎯 Filtered cart items for current page:', filtered);
+        console.log('Filtered cart items for current page:', filtered);
         return filtered;
     };
 
-    // ✅ Calculate totals for current page items only
     const getCurrentPageTotals = () => {
         const currentPageItems = getCurrentPageCartItems();
 
         if (currentPageItems.length === 0) {
             return {
                 subtotal: 0,
-                tax: 0,
-                discount: 0,
-                totalAmount: 0,
                 itemCount: 0
             };
         }
@@ -319,15 +303,10 @@ export default function Details() {
             return sum + (price * item.quantity);
         }, 0);
 
-        const tax = subtotal * 0.18; // 18% tax
-        const totalAmount = subtotal + tax;
         const itemCount = currentPageItems.reduce((sum, item) => sum + item.quantity, 0);
 
         return {
             subtotal: Math.round(subtotal),
-            tax: Math.round(tax),
-            discount: 0,
-            totalAmount: Math.round(totalAmount),
             itemCount
         };
     };
@@ -345,15 +324,28 @@ export default function Details() {
         return num.toString();
     };
 
-    const getVideoSource = () => {
-        if (currentService?.video) {
-            return currentService.video;
-        }
-        return "https://content.urbancompany.com/videos/supply/customer-app-supply/1749625423509-fd8c48/1749625423509-fd8c48.m3u8";
-    };
+    
+const getVideoSource = () => {
+    //  First priority: Current service se video
+    if (currentService?.video) {
+        console.log('Using service video:', currentService.video);
+        return currentService.video;
+    }
+    
+    // Second priority: Category services se first video
+    const serviceWithVideo = categoryServices.find(s => s.video);
+    if (serviceWithVideo?.video) {
+        console.log(' Using category service video:', serviceWithVideo.video);
+        return serviceWithVideo.video;
+    }
+    
+    // Fallback: Default placeholder video
+    console.log(' Using fallback video');
+    return "https://content.urbancompany.com/videos/supply/customer-app-supply/1749625423509-fd8c48/1749625423509-fd8c48.m3u8";
+};
 
     const handleLoginSuccess = () => {
-        console.log('✅ Login successful - updating state');
+        console.log('Login successful - updating state');
         setIsLoggedIn(true);
         checkLoginStatus();
         loadCart();
@@ -544,11 +536,12 @@ export default function Details() {
                                                                 />
                                                             </div>
                                                         )}
+
                                                         {quantity > 0 ? (
                                                             <div className="flex items-center border-2 border-purple-600 rounded-lg">
                                                                 <button
                                                                     onClick={() => handleUpdateQuantity(item.id, quantity - 1)}
-                                                                    disabled={loading}
+                                                                    disabled={loadingItems[item.id]}
                                                                     className="px-3 py-2 text-purple-600 hover:bg-purple-50 disabled:opacity-50"
                                                                 >
                                                                     −
@@ -556,7 +549,7 @@ export default function Details() {
                                                                 <span className="px-4 py-2 text-sm font-medium">{quantity}</span>
                                                                 <button
                                                                     onClick={() => handleUpdateQuantity(item.id, quantity + 1)}
-                                                                    disabled={loading}
+                                                                    disabled={loadingItems[item.id]}
                                                                     className="px-3 py-2 text-purple-600 hover:bg-purple-50 disabled:opacity-50"
                                                                 >
                                                                     +
@@ -565,10 +558,10 @@ export default function Details() {
                                                         ) : (
                                                             <button
                                                                 onClick={() => handleAddToCart(item.id)}
-                                                                disabled={loading}
+                                                                disabled={loadingItems[item.id]}
                                                                 className="px-6 py-2 border-2 border-purple-600 text-purple-600 rounded-lg font-medium hover:bg-purple-50 transition whitespace-nowrap disabled:opacity-50"
                                                             >
-                                                                {loading ? 'Adding...' : 'Add'}
+                                                                {loadingItems[item.id] ? 'Adding...' : 'Add'}
                                                             </button>
                                                         )}
                                                     </div>
@@ -579,7 +572,7 @@ export default function Details() {
                                 )}
                             </div>
 
-                            {/* ✅ Right Sidebar - Cart (ONLY CURRENT PAGE ITEMS) */}
+                            {/* Right Sidebar - Cart */}
                             <div className="w-full lg:w-80 lg:pt-8 flex-shrink-0 lg:sticky lg:top-0 lg:h-fit">
                                 <div className="w-full space-y-6">
                                     <div className="rounded-lg border border-gray-200 p-4">
@@ -596,36 +589,41 @@ export default function Details() {
                                             </div>
                                         ) : (
                                             <>
-                                                {currentPageItems.map((item, idx) => (
-                                                    <div key={idx} className="rounded-lg p-4 mb-4 border border-gray-100">
-                                                        <div className="flex items-start justify-between gap-3 mb-3">
-                                                            <h4 className="text-sm font-medium text-gray-900 flex-1">{item.service.name}</h4>
-                                                            <div className="flex items-center border border-gray-300 rounded-md">
-                                                                <button
-                                                                    onClick={() => handleUpdateQuantity(item.service._id, item.quantity - 1)}
-                                                                    className="px-2 py-1 text-purple-600 hover:bg-gray-100"
-                                                                >
-                                                                    −
-                                                                </button>
-                                                                <span className="px-3 py-1 text-sm">{item.quantity}</span>
-                                                                <button
-                                                                    onClick={() => handleUpdateQuantity(item.service._id, item.quantity + 1)}
-                                                                    className="px-2 py-1 text-purple-600 hover:bg-gray-100"
-                                                                >
-                                                                    +
-                                                                </button>
+                                                {currentPageItems.map((item, idx) => {
+                                                    const itemPrice = item.discountPrice || item.price;
+                                                    const itemTotal = itemPrice * item.quantity;
+                                                    
+                                                    return (
+                                                        <div key={idx} className="rounded-lg p-4 mb-4 border border-gray-100">
+                                                            <div className="flex items-start justify-between gap-3 mb-3">
+                                                                <h4 className="text-sm font-medium text-gray-900 flex-1">{item.service.name}</h4>
+                                                                <div className="flex items-center border border-gray-300 rounded-md">
+                                                                    <button
+                                                                        onClick={() => handleUpdateQuantity(item.service._id, item.quantity - 1)}
+                                                                        className="px-2 py-1 text-purple-600 hover:bg-gray-100"
+                                                                    >
+                                                                        −
+                                                                    </button>
+                                                                    <span className="px-3 py-1 text-sm">{item.quantity}</span>
+                                                                    <button
+                                                                        onClick={() => handleUpdateQuantity(item.service._id, item.quantity + 1)}
+                                                                        className="px-2 py-1 text-purple-600 hover:bg-gray-100"
+                                                                    >
+                                                                        +
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <div className="text-right">
+                                                                <p className="text-sm font-semibold text-gray-900">₹{itemTotal}</p>
                                                             </div>
                                                         </div>
-                                                        <div className="text-right">
-                                                            <p className="text-sm font-semibold text-gray-900">₹{(item.discountPrice || item.price) * item.quantity}</p>
-                                                        </div>
-                                                    </div>
-                                                ))}
+                                                    );
+                                                })}
 
                                                 <NavLink to="/cart">
                                                     <button className="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700 transition">
                                                         <div className="flex items-center justify-between px-4">
-                                                            <span>₹{pageTotals.totalAmount}</span>
+                                                            <span>₹{pageTotals.subtotal}</span>
                                                             <span>View Cart ({pageTotals.itemCount})</span>
                                                         </div>
                                                     </button>

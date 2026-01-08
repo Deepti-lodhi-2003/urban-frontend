@@ -90,31 +90,31 @@ const handleVerify = async () => {
       otp: otpValue
     });
 
-    console.log('🔍 OTP Verification Response:', response.data);
+    console.log(' OTP Verification Response:', response.data);
 
     if (response.data.success && response.data.token) {
-      // ✅ CRITICAL FIX: 'authToken' use karo, 'token' nahi!
-      console.log('💾 Saving authToken:', response.data.token);
-      localStorage.setItem('authToken', response.data.token); // ✅ FIX
+      //  CRITICAL FIX: 'authToken' use karo, 'token' nahi!
+      console.log(' Saving authToken:', response.data.token);
+      localStorage.setItem('authToken', response.data.token); 
       localStorage.setItem('user', JSON.stringify(response.data.user));
       
       // Verify token saved
       const savedToken = localStorage.getItem('authToken');
-      console.log('✅ Token saved successfully:', !!savedToken);
-      console.log('✅ Token length:', savedToken?.length);
+      console.log(' Token saved successfully:', !!savedToken);
+      console.log('Token length:', savedToken?.length);
       
       // Dispatch event for all components
       window.dispatchEvent(new CustomEvent('userLoggedIn'));
       window.dispatchEvent(new CustomEvent('cartUpdated'));
       
-      console.log('✅ Login successful:', response.data.user);
+      console.log(' Login successful:', response.data.user);
       onSuccess();
       setOtp(['', '', '', '', '', '']);
     } else {
       setError('Invalid OTP or verification failed');
     }
   } catch (err) {
-    console.error('❌ Error verifying OTP:', err);
+    console.error(' Error verifying OTP:', err);
     setError(err?.response?.data?.message || err?.message || 'Invalid OTP. Please try again.');
     setOtp(['', '', '', '', '', '']);
     inputRefs.current[0]?.focus();

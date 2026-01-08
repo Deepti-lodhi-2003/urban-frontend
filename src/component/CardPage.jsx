@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ShoppingCart } from 'lucide-react';
 import Header from './Header';
 import Footer from './Footer';
 import { getCart, updateCartItem, removeFromCart } from '../page/Api';
 
 export default function CardPage() {
+  const navigate = useNavigate();
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -51,6 +52,25 @@ export default function CardPage() {
     } catch (error) {
       console.error('Error updating cart:', error);
     }
+  };
+
+  const handleCheckoutSingleItem = (item) => {
+    const checkoutItem = {
+      service: item.service,
+      quantity: item.quantity,
+      price: item.price,
+      discountPrice: item.discountPrice,
+      totalPrice: (item.discountPrice || item.price) * item.quantity
+    };
+    
+    sessionStorage.setItem('checkoutItem', JSON.stringify(checkoutItem));
+    navigate('/checkout');
+  };
+
+  const getImageUrl = (imageUrl) => {
+    if (!imageUrl) return 'https://via.placeholder.com/150';
+    if (imageUrl.startsWith('http')) return imageUrl;
+    return `https://backend-urbancompany-1.onrender.com${imageUrl}`;
   };
 
   const EmptyCart = () => (
@@ -102,9 +122,12 @@ export default function CardPage() {
             <div className="w-16 h-16 bg-white rounded-lg flex items-center justify-center overflow-hidden">
               {item.service.images && item.service.images.length > 0 ? (
                 <img 
-                  src={item.service.images[0]} 
+                  src={getImageUrl(item.service.images[0])}
                   alt={item.service.name}
                   className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.target.src = 'https://via.placeholder.com/150';
+                  }}
                 />
               ) : (
                 <span className="text-3xl">🚽</span>
@@ -144,72 +167,18 @@ export default function CardPage() {
           <div className="flex gap-3">
             <NavLink to="/" className="flex-1">
               <button className="w-full px-6 py-3 border border-gray-300 rounded-lg font-semibold hover:bg-white transition-colors">
-                Add Services
+                Add More
               </button>
             </NavLink>
-            <NavLink to="/checkout" className="flex-1">
-              <button className="w-full px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition-colors">
-                Checkout
-              </button>
-            </NavLink>
+            <button 
+              onClick={() => handleCheckoutSingleItem(item)}
+              className="flex-1 px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition-colors"
+            >
+              Checkout
+            </button>
           </div>
         </div>
       ))}
-
-      {/* Price Summary */}
-      <div className="bg-white rounded-xl p-6 border-2 border-gray-200 mt-6">
-        <h3 className="text-lg font-bold mb-4">Price Details</h3>
-        
-        <div className="space-y-3">
-          <div className="flex justify-between text-gray-700">
-            <span>Subtotal</span>
-            <span>₹{Math.round(cart.subtotal)}</span>
-          </div>
-          
-          <div className="flex justify-between text-gray-700">
-            <span>Tax (18%)</span>
-            <span>₹{Math.round(cart.tax)}</span>
-          </div>
-          
-          {cart.discount > 0 && (
-            <div className="flex justify-between text-green-600">
-              <span>Discount</span>
-              <span>-₹{Math.round(cart.discount)}</span>
-            </div>
-          )}
-          
-          <div className="border-t pt-3 mt-3">
-            <div className="flex justify-between text-xl font-bold">
-              <span>Total Amount</span>
-              <span className="text-purple-600">₹{Math.round(cart.totalAmount)}</span>
-            </div>
-          </div>
-        </div>
-
-        {cart.discount > 0 && (
-          <div className="mt-4 p-3 bg-green-50 rounded-lg">
-            <p className="text-sm text-green-700 font-medium">
-              🎉 Congratulations! ₹{Math.round(cart.discount)} saved so far!
-            </p>
-          </div>
-        )}
-      </div>
-
-      {/* Offers Section */}
-      <div className="mt-6 p-4 bg-green-50 rounded-lg border border-green-200">
-        <div className="flex items-start gap-3">
-          <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="#05945B" xmlns="http://www.w3.org/2000/svg">
-              <path d="M7.75 8.5a.75.75 0 111.5 0 .75.75 0 01-1.5 0zM14.75 15.5a.75.75 0 111.5 0 .75.75 0 01-1.5 0z" fill="#05945B"></path>
-              <path fillRule="evenodd" clipRule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12zm6.5-5.75a2.25 2.25 0 100 4.5 2.25 2.25 0 000-4.5zm7 7a2.25 2.25 0 100 4.5 2.25 2.25 0 000-4.5zm-8.93 3.12l9.9-9.9 1.06 1.06-9.9 9.9-1.06-1.06z" fill="#05945B"></path>
-            </svg>
-          </div>
-          <div className="flex-1">
-            <h3 className="font-semibold text-gray-900 mb-1">Up to ₹150 cashback</h3>
-            <p className="text-sm text-gray-600">Via Paytm UPI only</p>
-          </div>
-        </div>
-      </div>
     </div>
   );
 
@@ -240,7 +209,6 @@ export default function CardPage() {
    <Header/>
     <div className="min-h-screen bg-white">
       <div className="max-w-2xl mx-auto">
-        {/* Header */}
         <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 z-10">
           <NavLink to="/">
             <button className="p-2 hover:bg-gray-100 rounded-full">
@@ -249,7 +217,6 @@ export default function CardPage() {
           </NavLink>
         </div>
 
-        {/* Content */}
         {!cart || !cart.items || cart.items.length === 0 ? <EmptyCart /> : <CartWithItems />}
       </div>
     </div>

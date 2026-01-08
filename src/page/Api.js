@@ -24,7 +24,7 @@ api.interceptors.request.use(
   }
 );
 
-// Response interceptor - Handle errors globally
+
 api.interceptors.response.use(
   (response) => response.data,
   (error) => {
@@ -59,7 +59,6 @@ export const verifyOTP = async (phone, otp) => {
   try {
     const response = await api.post('/auth/verify-otp', { phone, otp });
     
-    // Save token and user data
     if (response.success && response.token) {
       localStorage.setItem('authToken', response.token);
       localStorage.setItem('user', JSON.stringify(response.user));
@@ -398,7 +397,7 @@ export const globalSearch = async (query, city = '') => {
       params.city = city;
     }
     
-    console.log('🔍 Searching for:', query, 'in city:', city || 'all cities');
+    console.log(' Searching for:', query, 'in city:', city || 'all cities');
     
     const response = await api.get('/search', { params });
     return response;

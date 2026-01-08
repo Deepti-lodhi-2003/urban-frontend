@@ -12,18 +12,18 @@ const axiosInstance = axios.create({
 // Request interceptor - token add karne ke liye
 axiosInstance.interceptors.request.use(
   (config) => {
-    // ✅ FIX: 'authToken' use karo localStorage se (consistent naming)
+  
     const token = localStorage.getItem('authToken');
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`; // ✅ FIXED: token variable use karo
-      console.log('🔑 Token added to request:', token.substring(0, 20) + '...');
+      config.headers.Authorization = `Bearer ${token}`; 
+      console.log(' Token added to request:', token.substring(0, 20) + '...');
     } else {
-      console.log('⚠️ No token found in localStorage');
+      console.log(' No token found in localStorage');
     }
     return config;
   },
   (error) => {
-    console.error('❌ Request interceptor error:', error);
+    console.error(' Request interceptor error:', error);
     return Promise.reject(error);
   }
 );
@@ -31,7 +31,7 @@ axiosInstance.interceptors.request.use(
 // Response interceptor - error handling ke liye
 axiosInstance.interceptors.response.use(
   (response) => {
-    console.log('✅ Response received:', response.config.url);
+    console.log(' Response received:', response.config.url);
     return response;
   },
   (error) => {
@@ -39,11 +39,11 @@ axiosInstance.interceptors.response.use(
       // Server ne response diya but error hai
       const { status, data } = error.response;
       
-      console.error('❌ Response error:', status, data);
+      console.error(' Response error:', status, data);
       
-      // ✅ 401 Unauthorized - token invalid/expired
+    
       if (status === 401) {
-        console.log('🔓 Token expired/invalid, clearing localStorage');
+        console.log(' Token expired/invalid, clearing localStorage');
         localStorage.removeItem('authToken');
         localStorage.removeItem('user');
         window.dispatchEvent(new CustomEvent('userLoggedOut'));
@@ -54,11 +54,11 @@ axiosInstance.interceptors.response.use(
       return Promise.reject(data.message || 'Something went wrong');
     } else if (error.request) {
       // Request bheja but response nahi aaya
-      console.error('❌ Network error:', error.request);
+      console.error('Network error:', error.request);
       return Promise.reject('Network error. Please check your connection.');
     } else {
       // Kuch aur error
-      console.error('❌ Error:', error.message);
+      console.error(' Error:', error.message);
       return Promise.reject(error.message || 'Something went wrong');
     }
   }

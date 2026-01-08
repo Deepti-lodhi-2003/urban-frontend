@@ -7,12 +7,9 @@ export default function BookedSlider() {
   const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
-  
-
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
 
   useEffect(() => {
     const checkMobile = () => {
@@ -25,7 +22,6 @@ export default function BookedSlider() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-
   useEffect(() => {
     loadServices();
   }, []);
@@ -35,16 +31,12 @@ export default function BookedSlider() {
       setLoading(true);
       setError(null);
       
-      // API call - sirf 10 most booked services chahiye
       const response = await fetchServices({
         page: 1,
         limit: 10,
-        // Agar aapke API mein sorting option hai toh add karo
-        // sortBy: 'mostBooked' ya 'rating' 
       });
 
       if (response.success && response.data.services) {
-        // API se data set karo
         setServices(response.data.services);
       } else {
         setError('No services found');
@@ -55,6 +47,18 @@ export default function BookedSlider() {
     } finally {
       setLoading(false);
     }
+  };
+
+  // ✅ Handle card click - same logic as Slider2
+  const handleCardClick = (service) => {
+    // Convert service name to URL-friendly format
+    const urlFriendlyName = service.name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
+    
+    // Navigate to details page with service ID and name in URL
+    navigate(`/service/${urlFriendlyName}/${service._id}`);
   };
 
   const cardsToShow = isMobile ? 2 : 5;
@@ -151,6 +155,7 @@ export default function BookedSlider() {
             <button
               onClick={prevSlide}
               className="absolute left-0 md:-left-2 top-1/2 -translate-y-1/2 -translate-x-1 md:-translate-x-2 z-30 bg-white rounded-full p-2 md:p-3 shadow-lg md:shadow-2xl hover:shadow-xl transition-all border border-gray-300 hover:border-gray-400"
+              aria-label="Previous slide"
             >
               <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-gray-800" />
             </button>
@@ -162,7 +167,7 @@ export default function BookedSlider() {
               {getVisibleCards().map((service) => (
                 <div
                   key={service._id}
-                  onClick={() => navigate(`/details/${service._id}`)}
+                  onClick={() => handleCardClick(service)}
                   className="cursor-pointer transition-all duration-300 group"
                 >
                   {/* Image Container */}
@@ -175,13 +180,14 @@ export default function BookedSlider() {
                           e.target.src = 'https://via.placeholder.com/300x225?text=No+Image';
                         }}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        loading="lazy"
                       />
                     </div>
                   </div>
                   
                   {/* Text Container */}
                   <div className="pt-2 md:pt-3">
-                    <h3 className="text-xs md:text-base font-semibold text-gray-900 line-clamp-2 mb-1 md:mb-2">
+                    <h3 className="text-xs md:text-base font-semibold text-gray-900 group-hover:text-purple-600 transition-colors line-clamp-2 mb-1 md:mb-2">
                       {service.name}
                     </h3>
                     
@@ -201,7 +207,7 @@ export default function BookedSlider() {
                       <span className="text-sm md:text-base text-gray-700">
                         ₹{service.discountPrice || service.price}
                       </span>
-                      {service.discountPrice && service.price && (
+                      {service.discountPrice && service.price && service.discountPrice < service.price && (
                         <span className="text-xs md:text-sm text-gray-500 line-through">
                           ₹{service.price}
                         </span>
@@ -218,6 +224,7 @@ export default function BookedSlider() {
             <button
               onClick={nextSlide}
               className="absolute right-0 md:right-0 top-1/2 -translate-y-1/2 translate-x-1 md:translate-x-2 z-30 bg-white rounded-full p-2 md:p-3 shadow-lg md:shadow-2xl hover:shadow-xl transition-all border border-gray-300 hover:border-gray-400"
+              aria-label="Next slide"
             >
               <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-gray-800" />
             </button>

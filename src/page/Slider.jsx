@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, AlertCircle } from 'lucide-react';
+import { getImageUrl } from './Api'; 
 
 const BASE_URL = 'https://backend-urbancompany-1.onrender.com/api';
-const SERVER_URL = 'https://backend-urbancompany-1.onrender.com';
 
 const fetchCategories = async () => {
   try {
@@ -18,20 +18,6 @@ const fetchCategories = async () => {
     console.error('Error fetching categories:', error);
     throw error;
   }
-};
-
-const getImageUrl = (imagePath) => {
-  if (!imagePath) {
-    return 'https://placehold.co/394x295/e2e8f0/64748b?text=No+Image';
-  }
-  
-  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
-    return imagePath;
-  }
-  
-  return imagePath.startsWith('/') 
-    ? `${SERVER_URL}${imagePath}` 
-    : `${SERVER_URL}/${imagePath}`;
 };
 
 export default function Slider() {
@@ -62,22 +48,25 @@ export default function Slider() {
       setError(null);
       const response = await fetchCategories();
       
-      console.log('📦 API Response:', response); 
+      console.log(' API Response:', response); 
       
       if (response.success && response.data) {
-      
         const activeCategories = response.data
           .filter(cat => cat.isActive)
           .sort((a, b) => (a.order || 0) - (b.order || 0));
         
-        console.log(' Active Categories:', activeCategories); 
-        console.log(' First Category Image:', activeCategories[0]?.image); 
+        console.log(' Active Categories:', activeCategories);
+        
+        // Log image URLs to debug
+        activeCategories.forEach(cat => {
+          console.log(`📷 ${cat.name}:`, cat.image, '→', getImageUrl(cat.image));
+        });
         
         setCategories(activeCategories);
       }
     } catch (err) {
       setError(err.message || 'Failed to load categories');
-      console.error('Error loading categories:', err);
+      console.error(' Error loading categories:', err);
     } finally {
       setLoading(false);
     }
@@ -92,14 +81,7 @@ export default function Slider() {
   };
 
   const handleSlideClick = (category) => {
-    // Option 1: Using React Router navigate (if you're using React Router)
-    // navigate(`/category/${category.slug}`);
-    
-    // Option 2: Using window.location (works without React Router)
-    window.location.href = `/category/${category.slug}`;
-    
-    // Option 3: If you want to navigate to services page with category filter
-    // window.location.href = `/services?category=${category._id}`;
+    window.location.href = `/category/${category.slug || category._id}`;
   };
 
   const getVisibleSlides = () => {
@@ -205,11 +187,16 @@ export default function Slider() {
                     src={getImageUrl(category.image)}
                     alt={category.name}
                     className="w-full h-auto aspect-[4/3] object-cover transition-transform duration-500 group-hover:scale-105"
-                    onLoad={() => console.log('✅ Image loaded:', category.name)}
+                    loading="lazy"
+                    onLoad={() => console.log(' Image loaded:', category.name)}
                     onError={(e) => {
-                      console.error('❌ Image failed:', category.name, category.image);
+                      console.error(' Image failed to load:', {
+                        category: category.name,
+                        originalPath: category.image,
+                        attemptedUrl: e.target.src
+                      });
                       e.target.onerror = null;
-                      e.target.src = 'https://placehold.co/394x295/e2e8f0/64748b?text=No+Image';
+                      e.target.src = 'https://via.placeholder.com/394x295/e2e8f0/64748b?text=No+Image';
                     }}
                   />
                   

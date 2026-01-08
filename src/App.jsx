@@ -23,22 +23,23 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/revamp" element={<Revamp/>} />
-        <Route path="/native" element={<Native/>} />
-        <Route path="/beauty" element={<Beauty/>} />
-        <Route path="/wallmakeover" element={<WallMakeover/>} />
-        <Route path="/instahelp" element={<InstaHelpPage/>} />
-        <Route path="/purchase" element={<Purchase/>} />
-        <Route path="/electrician" element={<Electrician/>} />
-        <Route path="/carpanter" element={<Carpanter/>} />
-        <Route path="/laptop" element={<Laptop/>} />
-<Route path="/service/:serviceName/:serviceId" element={<Detail />} />
-        <Route path="/checkout" element={<Checkout/>} />
-        <Route path="/model" element={<Modal/>} />
-        <Route path="/help" element={<HelpPage/>} />
-        <Route path='/bookings/:bookingId' element={<MyBookingsPage />} />
-        <Route path="/account" element={<AccountPage/>} />
-        <Route path="/cart" element={<CardPage/>} />
+        <Route path="/revamp" element={<Revamp />} />
+        <Route path="/native" element={<Native />} />
+        <Route path="/beauty" element={<Beauty />} />
+        <Route path="/wallmakeover" element={<WallMakeover />} />
+        <Route path="/instahelp" element={<InstaHelpPage />} />
+        <Route path="/purchase" element={<Purchase />} />
+        <Route path="/electrician" element={<Electrician />} />
+        <Route path="/carpanter" element={<Carpanter />} />
+        <Route path="/laptop" element={<Laptop />} />
+        <Route path="/service/:serviceName/:serviceId" element={<Detail />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/model" element={<Modal />} />
+        <Route path="/help" element={<HelpPage />} />
+        <Route path='/booking' element={<MyBookingsPage />} />
+        <Route path='/booking/:bookingId' element={<MyBookingsPage />} />
+        <Route path="/account" element={<AccountPage />} />
+        <Route path="/cart" element={<CardPage />} />
       </Routes>
     </BrowserRouter>
   )
