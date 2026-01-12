@@ -101,14 +101,13 @@ export default function BeautyBookedService() {
   return (
     <div className="w-full bg-white py-8 md:py-12">
       <div className="max-w-[1400px] mx-auto px-4">
-        {/* Header */}
+
         <div className="mb-6 md:mb-8 px-1 md:px-2">
           <h2 className="text-2xl md:text-4xl font-semibold text-gray-900">Most booked services</h2>
         </div>
 
-        {/* Slider Container */}
         <div className="relative">
-          {/* Left Arrow */}
+     
           {currentIndex > 0 && (
             <button
               onClick={prevSlide}
@@ -118,7 +117,6 @@ export default function BeautyBookedService() {
             </button>
           )}
 
-          {/* Cards Container */}
           <div className="px-0 md:px-8">
             <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
               {getVisibleCards().map((service) => (
@@ -126,7 +124,6 @@ export default function BeautyBookedService() {
                   key={service.id}
                   className="cursor-pointer transition-all duration-300 group"
                 >
-                  {/* Image Container */}
                   <div className="relative overflow-hidden rounded-xl md:rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 bg-gray-100">
                     <div className="w-full aspect-[4/3]">
                       <img
@@ -137,13 +134,11 @@ export default function BeautyBookedService() {
                     </div>
                   </div>
                   
-                  {/* Text Container */}
                   <div className="pt-2 md:pt-3">
                     <h3 className="text-xs md:text-base font-semibold text-gray-900 line-clamp-2 mb-1 md:mb-2">
                       {service.name}
                     </h3>
                     
-                    {/* Rating */}
                     <div className="flex items-center gap-1 mb-1 md:mb-2">
                       <Star className="w-2 h-2 md:w-3 md:h-3 fill-gray-600 text-gray-600" />
                       <span className="text-xs md:text-sm text-gray-600">
@@ -154,7 +149,6 @@ export default function BeautyBookedService() {
                       </span>
                     </div>
                     
-                    {/* Price */}
                     <div className="flex items-center gap-2">
                       <span className="text-sm md:text-base text-gray-700">
                         ₹{service.price}
@@ -171,7 +165,6 @@ export default function BeautyBookedService() {
             </div>
           </div>
 
-          {/* Right Arrow */}
           {currentIndex < maxIndex && (
             <button
               onClick={nextSlide}

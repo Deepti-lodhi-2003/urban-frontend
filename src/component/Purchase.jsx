@@ -11,7 +11,6 @@ export default function Purchase() {
     <div className="min-h-screen bg-white">
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-6">
-          {/* Left Section - Scrolls with middle */}
           <div className="w-full lg:w-64 flex-shrink-0">
             <div>
               <h1 className="text-3xl lg:text-4xl font-semibold text-gray-900 mb-4">Native Water Purifier</h1>
@@ -31,7 +30,6 @@ export default function Purchase() {
             </div>
           </div>
 
-          {/* Middle Section - Scrollable */}
           <div className="flex-1 min-w-0">
             <div className="border border-gray-200 rounded-lg">
               <div className="px-6 pt-6 pb-4">
@@ -39,7 +37,7 @@ export default function Purchase() {
               </div>
               
               <div className="divide-y divide-gray-200">
-                {/* Model 1 */}
+              
                 <div className="p-6">
                   <div className="flex flex-col md:flex-row gap-6">
                     <div className="flex-1">
@@ -75,7 +73,7 @@ export default function Purchase() {
                   </div>
                 </div>
 
-                {/* Model 2 */}
+              
                 <div className="p-6">
                   <div className="flex flex-col md:flex-row gap-6">
                     <div className="flex-1">
@@ -111,7 +109,7 @@ export default function Purchase() {
                   </div>
                 </div>
 
-                {/* Model 3 - New Launch */}
+            
                 <div className="p-6">
                   <div className="flex flex-col md:flex-row gap-6">
                     <div className="flex-1">
@@ -153,10 +151,10 @@ export default function Purchase() {
             </div>
           </div>
 
-          {/* Right Section - Sticky (doesn't scroll) */}
+        
           <div className="w-full lg:w-80 flex-shrink-0">
             <div className="lg:sticky lg:top-8 space-y-6">
-              {/* Cart */}
+        
               <div className="rounded-lg border border-gray-200">
                 <div className="flex flex-col items-center justify-center py-8">
                   <div className="w-32 h-24 mb-3">
@@ -185,7 +183,6 @@ export default function Purchase() {
                 </div>
               </div>
 
-              {/* Offer Card */}
               <div className="rounded-lg border border-gray-200 p-4">
                 <div className="flex items-start gap-3 mb-3">
                   <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
@@ -201,7 +198,7 @@ export default function Purchase() {
                 </button>
               </div>
 
-              {/* UC Promise */}
+           
               <div className="rounded-lg border border-gray-200 px-6 py-5">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-xl font-semibold text-gray-900">UC Promise</h3>

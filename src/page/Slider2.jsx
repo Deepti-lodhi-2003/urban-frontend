@@ -184,13 +184,11 @@ export default function Slider2() {
   };
 
   const handleCardClick = (service) => {
-    // Convert service name to URL-friendly format
     const urlFriendlyName = service.name
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)/g, '');
     
-    // Navigate to details page with service ID and name in URL
     navigate(`/service/${urlFriendlyName}/${service.id}`);
   };
 

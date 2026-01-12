@@ -157,7 +157,7 @@ export default function CleaningEsential() {
     return (
         <div className="w-full bg-white py-8 md:py-12">
             <div className="max-w-[1400px] mx-auto px-4">
-                {/* Header */}
+        
                 <div className="mb-6 md:mb-8 px-1 md:px-2 flex items-start justify-between">
                     <div>
                         <div className="mb-2 md:mb-3 px-1 md:px-2">

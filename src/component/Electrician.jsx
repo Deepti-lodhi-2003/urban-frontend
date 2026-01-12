@@ -152,7 +152,7 @@ export default function Electrician() {
        <Header/>
 
         <div className="flex flex-col lg:flex-row min-h-screen lg:h-screen px-4 md:px-7 gap-5 mt-10">
-            {/* Left Sidebar */}
+          
             <div className="w-full lg:w-92 bg-white p-4 md:p-6 lg:overflow-y-auto flex-shrink-0">
                 <div className="mb-6">
                     <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Electrician</h1>
@@ -192,16 +192,14 @@ export default function Electrician() {
                 </div>
             </div>
 
-            {/* Center Content - Scrollable */}
+         
             <div className="flex-1 lg:overflow-y-auto">
-                {/* Hero Banner with Animated Progress Line */}
                 <div className="relative overflow-hidden mb-6 md:mb-10">
                     <img 
                         className='w-full lg:w-[65vw] rounded-lg' 
                         src="https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_873,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/growth/luminosity/1726568985512-6ed92c.jpeg" 
                         alt="" 
                     />
-                    {/* Animated Progress Line - Bottom of Image */}
                     <div className="absolute bottom-5 left-0 w-full lg:w-[65vw] h-1 bg-gray-200 z-10">
                         <div className="h-full bg-white animate-progress"></div>
                     </div>
@@ -216,9 +214,8 @@ export default function Electrician() {
                     `}</style>
                 </div>
 
-                {/* Services List */}
                 <div className="flex flex-col lg:flex-row gap-6 px-0 md:px-8 pb-8 lg:border-t lg:border-l border-gray-200">
-                    {/* Center Services Section */}
+                   
                     <div className="flex-1 lg:pt-8 lg:border-r border-gray-200 lg:pr-8">
                         {services.map((section, idx) => (
                             <div key={idx} className="mb-8">
@@ -266,10 +263,10 @@ export default function Electrician() {
                         ))}
                     </div>
 
-                    {/* Right Sidebar - Sticky on Desktop, Below on Mobile */}
+                    
                     <div className="w-full lg:w-80 lg:pt-8 flex-shrink-0 lg:sticky lg:top-0 lg:h-fit">
                         <div className="w-full space-y-6">
-                            {/* Cart */}
+                       
                             <div className="rounded-lg border border-gray-200">
                                 <div className="flex flex-col items-center justify-center py-8">
                                     <div className="w-32 h-24 mb-3">
@@ -298,7 +295,7 @@ export default function Electrician() {
                                 </div>
                             </div>
 
-                            {/* Offer Card */}
+                         
                             <div className="rounded-lg border border-gray-200 p-4">
                                 <div className="flex items-start gap-3 mb-3">
                                     <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
@@ -317,7 +314,7 @@ export default function Electrician() {
                                 </button>
                             </div>
 
-                            {/* UC Promise */}
+                           
                             <div className="rounded-lg border border-gray-200 px-6 py-5">
                                 <div className="flex items-center justify-between mb-4">
                                     <h3 className="text-xl font-semibold text-gray-900">UC Promise</h3>

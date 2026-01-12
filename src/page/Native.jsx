@@ -113,28 +113,26 @@ export default function Native() {
             <Header />
 
             <div className="w-full bg-white py-8 md:py-12">
-  <div className="max-w-[1400px] mx-auto lg:px-12">
-    <div className="overflow-hidden shadow-sm cursor-pointer">
-      <img 
-        src="https://res.cloudinary.com/urbanclap/image/upload/t_high_res_template/w_1232,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/supply/customer-app-supply/1766332205461-18c2b4.jpeg" 
-        alt="Banner" 
-        className="w-full h-auto transition-transform duration-300 ease-out hover:scale-[1.02]"
-      />
-    </div>
-  </div>
-</div>
+                <div className="max-w-[1400px] mx-auto lg:px-12">
+                    <div className="overflow-hidden shadow-sm cursor-pointer">
+                        <img
+                            src="https://res.cloudinary.com/urbanclap/image/upload/t_high_res_template/w_1232,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/supply/customer-app-supply/1766332205461-18c2b4.jpeg"
+                            alt="Banner"
+                            className="w-full h-auto transition-transform duration-300 ease-out hover:scale-[1.02]"
+                        />
+                    </div>
+                </div>
+            </div>
 
-            {/* First Slider - Beautiful walls */}
             <div className="w-full bg-white py-12 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-7xl mx-auto">
-                    {/* Header */}
+
                     <div className="mb-8 px-5">
                         <h2 className="text-4xl font-semibold text-gray-900">Best-in-class features</h2>
                     </div>
 
-                    {/* Slider Container */}
                     <div className="relative px-5">
-                        {/* Left Arrow */}
+
                         {currentIndex2 > 0 && (
                             <button
                                 onClick={prevSlide2}
@@ -145,7 +143,6 @@ export default function Native() {
                             </button>
                         )}
 
-                        {/* Cards Container */}
                         <div className="overflow-hidden">
                             <div
                                 className="flex gap-6 transition-transform duration-500 ease-out"
@@ -157,14 +154,13 @@ export default function Native() {
                                         className={`flex-shrink-0 ${isMobile ? 'w-full' : 'w-[calc(33.333%-16px)]'}`}
                                     >
                                         <div className="relative rounded-2xl overflow-hidden h-133 group cursor-pointer">
-                                            {/* Background Image */}
+
                                             <img
                                                 src={space.image}
                                                 alt={space.title}
                                                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                                             />
 
-                                            {/* Title */}
                                             <div className="absolute bottom-0 left-0 right-0 p-6">
                                                 <h3 className="text-white text-2xl font-semibold">{space.title}</h3>
                                             </div>
@@ -174,7 +170,6 @@ export default function Native() {
                             </div>
                         </div>
 
-                        {/* Right Arrow */}
                         {currentIndex2 < maxIndex2 && (
                             <button
                                 onClick={nextSlide2}
@@ -191,29 +186,26 @@ export default function Native() {
 
 
             <div className="w-full bg-white py-8 md:py-12">
-  <div className="max-w-[1400px] mx-auto lg:px-12">
-    <div className="overflow-hidden shadow-sm cursor-pointer">
-      <img 
-        src="https://res.cloudinary.com/urbanclap/image/upload/t_high_res_template/w_1232,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/supply/customer-app-supply/1766332950494-9b1cf6.jpeg" 
-        alt="Banner" 
-        className="w-full h-auto transition-transform duration-300 ease-out hover:scale-[1.02]"
-      />
-    </div>
-  </div>
-</div>
+                <div className="max-w-[1400px] mx-auto lg:px-12">
+                    <div className="overflow-hidden shadow-sm cursor-pointer">
+                        <img
+                            src="https://res.cloudinary.com/urbanclap/image/upload/t_high_res_template/w_1232,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/supply/customer-app-supply/1766332950494-9b1cf6.jpeg"
+                            alt="Banner"
+                            className="w-full h-auto transition-transform duration-300 ease-out hover:scale-[1.02]"
+                        />
+                    </div>
+                </div>
+            </div>
 
 
-            {/* Second Slider - Explore by space */}
             <div className="w-full bg-white py-12 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-7xl mx-auto">
-                    {/* Header */}
+
                     <div className="mb-8 px-5">
                         <h2 className="text-4xl font-semibold text-gray-900">All intelligent features</h2>
                     </div>
 
-                    {/* Slider Container */}
                     <div className="relative px-5">
-                        {/* Left Arrow */}
                         {currentIndex1 > 0 && (
                             <button
                                 onClick={prevSlide1}
@@ -224,7 +216,6 @@ export default function Native() {
                             </button>
                         )}
 
-                        {/* Cards Container */}
                         <div className="overflow-hidden">
                             <div
                                 className="flex gap-6 transition-transform duration-500 ease-out"
@@ -236,14 +227,13 @@ export default function Native() {
                                         className={`flex-shrink-0 ${isMobile ? 'w-full' : 'w-[calc(33.333%-16px)]'}`}
                                     >
                                         <div className="relative rounded-2xl overflow-hidden h-133 group cursor-pointer">
-                                            {/* Background Image */}
+
                                             <img
                                                 src={space.image}
                                                 alt={space.title}
                                                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                                             />
 
-                                            {/* Title */}
                                             <div className="absolute bottom-0 left-0 right-0 p-6">
                                                 <h3 className="text-white text-2xl font-semibold">{space.title}</h3>
                                             </div>
@@ -253,7 +243,6 @@ export default function Native() {
                             </div>
                         </div>
 
-                        {/* Right Arrow */}
                         {currentIndex1 < maxIndex1 && (
                             <button
                                 onClick={nextSlide1}
@@ -268,17 +257,17 @@ export default function Native() {
             </div>
 
 
-<div className="w-full bg-white py-8 md:py-12">
-  <div className="max-w-[1400px] mx-auto lg:px-12">
-    <div className="overflow-hidden shadow-sm cursor-pointer">
-      <img 
-        src="https://res.cloudinary.com/urbanclap/image/upload/t_high_res_template/w_1232,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/growth/luminosity/1748612847256-8e2681.jpeg" 
-        alt="Banner" 
-        className="w-full h-auto transition-transform duration-300 ease-out hover:scale-[1.02]"
-      />
-    </div>
-  </div>
-</div>
+            <div className="w-full bg-white py-8 md:py-12">
+                <div className="max-w-[1400px] mx-auto lg:px-12">
+                    <div className="overflow-hidden shadow-sm cursor-pointer">
+                        <img
+                            src="https://res.cloudinary.com/urbanclap/image/upload/t_high_res_template/w_1232,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/growth/luminosity/1748612847256-8e2681.jpeg"
+                            alt="Banner"
+                            className="w-full h-auto transition-transform duration-300 ease-out hover:scale-[1.02]"
+                        />
+                    </div>
+                </div>
+            </div>
 
             <Footer />
 

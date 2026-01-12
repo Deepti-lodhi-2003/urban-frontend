@@ -6,7 +6,7 @@ export default function Footer() {
   return (
     <footer className="bg-gray-100 border-t border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Logo */}
+      
         <div className="mb-12">
           <img 
             src="https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_144,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/supply/partner-training/1628575858610-5b0ae4.png" 
@@ -15,9 +15,9 @@ export default function Footer() {
           />
         </div>
 
-        {/* Footer Content Grid */}
+      
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-          {/* Company */}
+         
           <div>
             <h3 className="text-gray-900 font-semibold text-xl mb-3">Company</h3>
             <ul className="space-y-1.5">
@@ -31,7 +31,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* For customers */}
+       
           <div>
             <h3 className="text-gray-900 font-semibold text-xl mb-3">For customers</h3>
             <ul className="space-y-1.5">
@@ -41,7 +41,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* For professionals */}
+       
           <div>
             <h3 className="text-gray-900 font-semibold text-xl mb-3">For professionals</h3>
             <ul className="space-y-1.5">
@@ -51,11 +51,11 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Social links */}
+       
           <div>
             <h3 className="text-gray-900 font-semibold text-xl mb-3">Social links</h3>
             
-            {/* Social Icons */}
+         
             <div className="flex gap-3 mb-6">
               <a href="#" className="w-10 h-10 rounded-full bg-white border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors">
                 <Twitter className="w-4 h-4 text-gray-800" />
@@ -91,7 +91,7 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom Section */}
+       
         <div className="border-t border-gray-200 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div className="text-xs text-gray-600">

@@ -54,20 +54,20 @@ export default function CategoryPage() {
         const token = localStorage.getItem('authToken');
         const loggedIn = !!token;
         setIsLoggedIn(loggedIn);
-        console.log('🔐 Login Status:', { isLoggedIn: loggedIn, hasToken: !!token });
+        console.log(' Login Status:', { isLoggedIn: loggedIn, hasToken: !!token });
         return loggedIn;
     };
 
     const loadCategoryData = async () => {
         try {
             setLoadingServices(true);
-            console.log('📁 Loading category:', categoryId);
+            // console.log(' Loading category:', categoryId);
 
             const categoryResponse = await fetchCategoryById(categoryId);
             
             if (categoryResponse.success && categoryResponse.data) {
                 const category = categoryResponse.data;
-                console.log('✅ Category loaded:', category.name);
+                // console.log(' Category loaded:', category.name);
                 
                 const processedCategory = {
                     id: category._id,
@@ -78,7 +78,7 @@ export default function CategoryPage() {
                     slug: category.slug
                 };
 
-                console.log('🎥 Category video:', processedCategory.video ? 'Available' : 'Not available');
+                // console.log(' Category video:', processedCategory.video ? 'Available' : 'Not available');
                 setCurrentCategory(processedCategory);
 
                 const servicesResponse = await fetchServices({
@@ -89,7 +89,7 @@ export default function CategoryPage() {
 
                 if (servicesResponse.success && servicesResponse.data.services) {
                     const services = servicesResponse.data.services;
-                    console.log('🎯 Services found:', services.length);
+                    // console.log(' Services found:', services.length);
 
                     const formattedServices = services.map(service => ({
                         id: service._id,
@@ -107,11 +107,11 @@ export default function CategoryPage() {
 
                     setCategoryServices(formattedServices);
                     setCurrentPageServiceIds(formattedServices.map(s => s.id));
-                    console.log('✅ Services loaded successfully');
+                    // console.log('Services loaded successfully');
                 }
             }
         } catch (error) {
-            console.error('❌ Error loading category:', error);
+            // console.error(' Error loading category:', error);
         } finally {
             setLoadingServices(false);
         }
@@ -218,17 +218,17 @@ export default function CategoryPage() {
 
     const getVideoSource = () => {
         if (currentCategory?.video) {
-            console.log('✅ Using category video');
+            // console.log('Using category video');
             return currentCategory.video;
         }
 
         const serviceWithVideo = categoryServices.find(s => s.video);
         if (serviceWithVideo?.video) {
-            console.log('✅ Using service video');
+            // console.log('Using service video');
             return serviceWithVideo.video;
         }
 
-        console.log('⚠️ Using fallback video');
+        // console.log(' Using fallback video');
         return "https://content.urbancompany.com/videos/supply/customer-app-supply/1749625423509-fd8c48/1749625423509-fd8c48.m3u8";
     };
 
@@ -271,7 +271,7 @@ export default function CategoryPage() {
 
             <div className="min-h-screen">
                 <div className="flex flex-col lg:flex-row min-h-screen lg:h-screen px-4 md:px-7 gap-5 mt-10">
-                    {/* Left Sidebar */}
+                    
                     <div className="w-full lg:w-92 bg-white p-4 md:p-6 lg:overflow-y-auto flex-shrink-0">
                         <div className="mb-6">
                             <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
@@ -301,9 +301,9 @@ export default function CategoryPage() {
                         </div>
                     </div>
 
-                    {/* Center Content */}
+                   
                     <div className="flex-1 lg:overflow-y-auto">
-                        {/* Video */}
+                      
                         <div className="relative overflow-hidden mb-6 md:mb-10 rounded-lg">
                             <video
                                 key={getVideoSource()}
@@ -323,7 +323,7 @@ export default function CategoryPage() {
                             </div>
                         </div>
 
-                        {/* Services List */}
+                        
                         <div className="flex flex-col lg:flex-row gap-6 px-0 md:px-8 pb-8 lg:border-t border-gray-200 lg:border-l">
                             <div className="flex-1 lg:pt-8 lg:border-r border-gray-200 lg:pr-8">
                                 {loadingServices ? (
@@ -402,7 +402,7 @@ export default function CategoryPage() {
                                 )}
                             </div>
 
-                            {/* Right Sidebar - Cart */}
+                            
                             <div className="w-full lg:w-80 lg:pt-8 flex-shrink-0 lg:sticky lg:top-0 lg:h-fit">
                                 <div className="w-full space-y-6">
                                     <div className="rounded-lg border border-gray-200 p-4">
@@ -454,7 +454,7 @@ export default function CategoryPage() {
                                         )}
                                     </div>
 
-                                    {/* Offers */}
+                                   
                                     <div className="rounded-lg border border-gray-200 p-4 bg-white">
                                         <div className="flex items-start gap-3 mb-3">
                                             <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
@@ -492,7 +492,7 @@ export default function CategoryPage() {
                                         </button>
                                     </div>
 
-                                    {/* UC Promise */}
+                                    
                                     <div className="rounded-lg border border-gray-200 px-6 py-5">
                                         <div className="flex items-center justify-between mb-4">
                                             <h3 className="text-xl font-semibold text-gray-900">UC Promise</h3>

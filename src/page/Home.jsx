@@ -31,7 +31,7 @@ export default function Home() {
     "https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_56,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/growth/home-screen/1678868062337-08bfc2.jpeg"
   ];
 
-  // Fetch categories on component mount
+
   useEffect(() => {
     const loadCategories = async () => {
       try {
@@ -39,7 +39,6 @@ export default function Home() {
         const response = await fetchCategories();
         
         if (response.success && response.data) {
-          // Add Insta Help as first item
           const instaHelp = {
             _id: 'insta-help',
             name: 'Insta Help',
@@ -49,7 +48,6 @@ export default function Home() {
             isActive: true
           };
           
-          // Filter only active categories and sort by order
           const activeCategories = response.data
             .filter(cat => cat.isActive)
             .sort((a, b) => (a.order || 0) - (b.order || 0));
@@ -58,7 +56,6 @@ export default function Home() {
         }
       } catch (error) {
         console.error('Error loading categories:', error);
-        // Set empty array on error so UI doesn't break
         setCategories([]);
       } finally {
         setLoading(false);
@@ -68,7 +65,6 @@ export default function Home() {
     loadCategories();
   }, []);
 
-  // Animate Insta Help images
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex((prev) => (prev + 1) % instaHelpImages.length);
@@ -76,9 +72,9 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
-  // Function to open modal with selected category and fetch services
+
   const handleServiceClick = async (category) => {
-    // Don't open modal for Insta Help
+  
     if (category.isInstaHelp) {
       return;
     }
@@ -92,18 +88,17 @@ export default function Home() {
       });
       setIsModalOpen(true);
 
-      // Fetch services for this category
       const response = await fetchServices({
         category: category._id,
-        limit: 50 // Get more services
+        limit: 50 
       });
 
       if (response.success && response.data && response.data.services) {
-        // Transform API services to match modal format
+      
         const transformedServices = response.data.services.map(service => ({
           id: service._id,
           name: service.name,
-          icon: '🛠️', // Default icon
+          icon: '🛠️', 
           price: service.discountPrice || service.price,
           originalPrice: service.price !== service.discountPrice ? service.price : null,
           rating: service.rating || 0,
@@ -124,17 +119,16 @@ export default function Home() {
     }
   };
 
-  // Function to close modal
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedCategory(null);
     setServices([]);
   };
 
-  // Function to handle subcategory/service click
   const handleSubcategoryClick = (service) => {
-    console.log('Selected service:', service);
-    // Navigate to service details page
+    // console.log('Selected service:', service);
+
     window.location.href = `/service/${service.id}`;
     handleCloseModal();
   };
@@ -147,7 +141,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:py-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
             
-            {/* Left Section - Services */}
+
             <div className="w-full flex flex-col">
               <div className="mb-6 md:mb-8 px-1 md:px-2">
                 <h1 className="text-2xl md:text-4xl font-semibold text-gray-900">
@@ -160,7 +154,6 @@ export default function Home() {
                   What are you looking for?
                 </h2>
 
-                {/* Loading State */}
                 {loading ? (
                   <div className="grid grid-cols-3 gap-5">
                     {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
@@ -171,12 +164,11 @@ export default function Home() {
                     ))}
                   </div>
                 ) : categories.length === 0 ? (
-                  // Empty State
+             
                   <div className="text-center py-8">
                     <p className="text-gray-500">No categories available at the moment.</p>
                   </div>
                 ) : (
-                  /* Services Grid */
                   <div className="grid grid-cols-3 sm:grid-cols-3 gap-5">
                     {categories.map((category) => (
                       <div
@@ -185,7 +177,6 @@ export default function Home() {
                         onClick={() => handleServiceClick(category)}
                       >
                         {category.isInstaHelp ? (
-                          // Special Insta Help card with animation
                           <NavLink to="/instahelp">
                             <div className="flex flex-col items-center justify-center text-center cursor-pointer">
                               <div className="relative mb-3 rounded-lg py-4 px-4 hover:bg-gray-100 cursor-pointer w-[25vw] sm:w-[10vw] flex items-center justify-center overflow-hidden" style={{backgroundColor:"rgba(245, 245, 245, 1.00)", height: "80px"}}>
@@ -213,7 +204,6 @@ export default function Home() {
                             </div>
                           </NavLink>
                         ) : (
-                          // Regular service cards from API
                           <>
                             {category.badge && (
                               <span className="absolute top-2 right-2 bg-pink-600 text-white text-xs font-bold px-2 py-0.5 rounded z-10">
@@ -243,7 +233,6 @@ export default function Home() {
                 )}
               </div>
 
-              {/* Stats Section */}
               <div className="flex items-center gap-10 sm:gap-18 mt-12">
                 <div className="flex items-center gap-3">
                   <img src="https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_48,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/growth/home-screen/1693570188661-dba2e7.jpeg" alt="" />
@@ -262,8 +251,6 @@ export default function Home() {
                 </div>
               </div>
             </div>
-
-            {/* Right Section - Single Image */}
             <div className="hidden lg:block h-[650px]">
               <img
                 src="https://res.cloudinary.com/urbanclap/image/upload/t_high_res_template,q_auto:low,f_auto/dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/growth/home-screen/1696852847761-574450.jpeg"
@@ -339,7 +326,7 @@ export default function Home() {
       <SalonForMen/>
       <Footer/>
 
-      {/* Modal Component */}
+  
       <ServiceCategoryModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}

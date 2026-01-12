@@ -128,7 +128,6 @@ export default function MyBookingsPage() {
         );
     }
 
-    // ==================== SINGLE BOOKING DETAILS VIEW ====================
     if (bookingId && booking) {
         const paymentStatus = getPaymentStatus(booking);
         const paymentMethod = getPaymentMethod(booking);
@@ -147,7 +146,7 @@ export default function MyBookingsPage() {
                 </header>
 
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6">
-                    {/* Success Banner */}
+                  
                     {booking.status === 'confirmed' && (
                         <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl p-6 text-center mb-4 shadow-sm">
                             <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-sm">
@@ -182,7 +181,6 @@ export default function MyBookingsPage() {
                     )}
 
                     <div className="space-y-3">
-                        {/* Service Details */}
                         <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow">
                             <div className="flex items-start gap-3">
                                 {booking.service?.images?.[0] ? (
@@ -215,9 +213,9 @@ export default function MyBookingsPage() {
                             </div>
                         </div>
 
-                        {/* Schedule & Address Grid */}
+                   
                         <div className="grid md:grid-cols-2 gap-3">
-                            {/* Schedule */}
+                          
                             <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow">
                                 <div className="flex items-start gap-3">
                                     <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -231,7 +229,7 @@ export default function MyBookingsPage() {
                                 </div>
                             </div>
 
-                            {/* Address */}
+                           
                             <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow">
                                 <div className="flex items-start gap-3">
                                     <div className="w-10 h-10 bg-orange-50 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -258,7 +256,6 @@ export default function MyBookingsPage() {
                             </div>
                         </div>
 
-                        {/* Payment Info */}
                         <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow">
                             <div className="flex items-start gap-3">
                                 <div className="w-10 h-10 bg-emerald-50 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -315,7 +312,7 @@ export default function MyBookingsPage() {
                             </div>
                         </div>
 
-                        {/* Notes */}
+                       
                         {booking.notes && (
                             <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
                                 <h3 className="text-xs font-medium text-gray-500 mb-1">Notes</h3>
@@ -323,7 +320,7 @@ export default function MyBookingsPage() {
                             </div>
                         )}
 
-                        {/* Actions */}
+                     
                         <div className="flex gap-3 pt-2">
                             <button
                                 onClick={() => navigate('/')}
@@ -344,7 +341,7 @@ export default function MyBookingsPage() {
         );
     }
 
-    // ==================== ERROR STATE ====================
+
     if (error) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
@@ -374,7 +371,7 @@ export default function MyBookingsPage() {
         );
     }
 
-    // ==================== ALL BOOKINGS LIST VIEW ====================
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
             <header className="bg-white/80 backdrop-blur-md border-b border-gray-200/50 sticky top-0 z-40 shadow-sm">
@@ -486,7 +483,7 @@ export default function MyBookingsPage() {
                         })}
                     </div>
 
-                    {/* Pagination */}
+             
                     {totalPages > 1 && (
                         <div className="flex items-center justify-center gap-2 mt-6">
                             <button

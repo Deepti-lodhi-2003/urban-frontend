@@ -12,7 +12,6 @@ export default function HomeRepair() {
     const [error, setError] = useState(null);
     const [homeRepairCategory, setHomeRepairCategory] = useState(null);
 
-    // ✅ Target Category - Home Repair & Installation
     const TARGET_CATEGORY_NAME = "Home Repair & Installation";
     const TARGET_CATEGORY_SLUG = "home-repair-&-installation";
 
@@ -31,18 +30,16 @@ export default function HomeRepair() {
                 setLoading(true);
                 setError(null);
                 
-                console.log('🔍 Fetching Home Repair & Installation services...');
+                // console.log(' Fetching Home Repair & Installation services...');
                 
-                // Fetch all services
                 const response = await fetchServices({
                     page: 1,
-                    limit: 100, // Fetch more to filter
+                    limit: 100,
                 });
 
                 if (response.success && response.data?.services) {
-                    console.log('✅ Total Services fetched:', response.data.services.length);
+                    // console.log(' Total Services fetched:', response.data.services.length);
                     
-                    // ✅ Filter only Home Repair & Installation category services
                     const homeRepairServices = response.data.services.filter(service => {
                         const categoryName = service.category?.name;
                         const categorySlug = service.category?.slug;
@@ -51,7 +48,7 @@ export default function HomeRepair() {
                                categorySlug === TARGET_CATEGORY_SLUG;
                     });
 
-                    console.log('🔧 Home Repair & Installation Services:', homeRepairServices.length);
+                    // console.log(' Home Repair & Installation Services:', homeRepairServices.length);
 
                     const fetchedServices = homeRepairServices.map(service => ({
                         id: service._id,
@@ -71,26 +68,25 @@ export default function HomeRepair() {
                             : null
                     }));
 
-                    // Store category info from first service
                     if (fetchedServices.length > 0 && fetchedServices[0].categoryId) {
                         setHomeRepairCategory({
                             _id: fetchedServices[0].categoryId,
                             name: fetchedServices[0].categoryName,
                             slug: fetchedServices[0].categorySlug
                         });
-                        console.log('📁 Category Info:', {
-                            id: fetchedServices[0].categoryId,
-                            name: fetchedServices[0].categoryName
-                        });
+                        // console.log(' Category Info:', {
+                        //     id: fetchedServices[0].categoryId,
+                        //     name: fetchedServices[0].categoryName
+                        // });
                     }
 
                     setServices(fetchedServices);
                 } else {
-                    console.log('⚠️ No services found');
+                    // console.log('No services found');
                     setServices([]);
                 }
             } catch (err) {
-                console.error('❌ Error loading home repair services:', err);
+                console.error('Error loading home repair services:', err);
                 setError('Failed to load services');
             } finally {
                 setLoading(false);
@@ -136,7 +132,6 @@ export default function HomeRepair() {
 
     const handleSeeAll = () => {
         if (homeRepairCategory) {
-            // Navigate to category page with category ID
             const urlFriendlyName = homeRepairCategory.slug || homeRepairCategory.name
                 .toLowerCase()
                 .replace(/[^a-z0-9]+/g, '-')
@@ -144,7 +139,6 @@ export default function HomeRepair() {
             
             navigate(`/category/${urlFriendlyName}/${homeRepairCategory._id}`);
         } else {
-            // Fallback to services page
             navigate('/services');
         }
     };

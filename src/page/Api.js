@@ -397,7 +397,7 @@ export const globalSearch = async (query, city = '') => {
       params.city = city;
     }
     
-    console.log(' Searching for:', query, 'in city:', city || 'all cities');
+    // console.log(' Searching for:', query, 'in city:', city || 'all cities');
     
     const response = await api.get('/search', { params });
     return response;

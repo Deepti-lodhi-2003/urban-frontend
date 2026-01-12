@@ -77,15 +77,15 @@ export default function UrbanCompanyHeader() {
       }
 
       try {
-        console.log('📡 Fetching user profile from API...');
+        // console.log(' Fetching user profile from API...');
         
         const response = await getMyProfile();
 
         if (response.success && response.data) {
-          console.log(' Profile fetched successfully');
-          console.log('User Name:', response.data.name);
-          console.log('User Phone:', response.data.phone);
-          console.log('Profile Image:', response.data.profileImage);
+          // console.log(' Profile fetched successfully');
+          // console.log('User Name:', response.data.name);
+          // console.log('User Phone:', response.data.phone);
+          // console.log('Profile Image:', response.data.profileImage);
           
           setIsLoggedIn(true);
           setUserData(response.data);
@@ -96,7 +96,7 @@ export default function UrbanCompanyHeader() {
         }
       } catch (error) {
         console.error(' API Error:', error);
-        console.log('Logging out user due to API error');
+        // console.log('Logging out user due to API error');
         
         
         localStorage.removeItem('authToken');
@@ -185,7 +185,7 @@ export default function UrbanCompanyHeader() {
 
     try {
       const response = await globalSearch(query, currentCity);
-      console.log(' Search results for', query, 'in', currentCity, ':', response);
+      // console.log(' Search results for', query, 'in', currentCity, ':', response);
 
       if (response && response.success) {
         setSearchResults(response.data);
@@ -229,7 +229,7 @@ export default function UrbanCompanyHeader() {
           );
           const data = await response.json();
 
-          console.log('Location data:', data);
+          // console.log('Location data:', data);
 
           const city = data.address.city || data.address.town || data.address.village || 'Bhopal';
           const state = data.address.state || 'Madhya Pradesh';
@@ -276,17 +276,17 @@ export default function UrbanCompanyHeader() {
   //  LOGIN SUCCESS - SIRF API SE DATA
   const handleLoginSuccess = async () => {
     try {
-      console.log('📡 Fetching fresh profile after login...');
-      console.log('API Endpoint: GET /auth/me');
+      // console.log(' Fetching fresh profile after login...');
+      // console.log('API Endpoint: GET /auth/me');
       
       const response = await getMyProfile();
       
-      console.log('API Response after login:', response);
+      // console.log('API Response after login:', response);
 
       if (response.success && response.data) {
-        console.log(' Profile updated after login');
-        console.log('User Name:', response.data.name);
-        console.log('User Phone:', response.data.phone);
+        // console.log(' Profile updated after login');
+        // console.log('User Name:', response.data.name);
+        // console.log('User Phone:', response.data.phone);
         
         setIsLoggedIn(true);
         setUserData(response.data);
@@ -296,7 +296,7 @@ export default function UrbanCompanyHeader() {
       }
     } catch (error) {
       console.error('Error fetching profile after login:', error);
-      console.log('Logging out due to API error');
+      // console.log('Logging out due to API error');
       
 
       localStorage.removeItem('authToken');
@@ -311,7 +311,7 @@ export default function UrbanCompanyHeader() {
 
 
   const handleProfileUpdate = async (updatedData) => {
-    console.log(' Profile updated:', updatedData);
+    // console.log(' Profile updated:', updatedData);
     setUserData(updatedData);
     setShowProfileModal(false);
     
@@ -321,14 +321,14 @@ export default function UrbanCompanyHeader() {
   };
 
   const handleLogout = () => {
-    console.log('🚪 Logging out...');
+    // console.log(' Logging out...');
     localStorage.removeItem('authToken');
     localStorage.removeItem('user');
     setIsLoggedIn(false);
     setUserData(null);
     setShowUserMenu(false);
     setCartCount(0);
-    console.log(' Logout successful');
+    // console.log(' Logout successful');
   };
 
 
@@ -373,14 +373,14 @@ export default function UrbanCompanyHeader() {
                 >
                   Native
                 </NavLink>
-                <NavLink
+                {/* <NavLink
                   to="/beauty"
                   className={({ isActive }) =>
                     `text-sm font-medium ${isActive ? 'text-gray-900' : 'text-gray-500 hover:text-gray-900'}`
                   }
                 >
                   Beauty
-                </NavLink>
+                </NavLink> */}
               </nav>
             </div>
 

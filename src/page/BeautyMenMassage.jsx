@@ -57,7 +57,7 @@ export default function BeautyMenMassage() {
   return (
     <div className="w-full bg-white py-8 md:py-12">
       <div className="max-w-[1400px] mx-auto px-4">
-        {/* Header */}
+     
         <div className='pl-7 mb-9'>
                         <div className="mb-2 md:mb-3 px-1 md:px-2">
                             <h2 className="text-2xl md:text-4xl font-semibold text-gray-900">
@@ -69,9 +69,9 @@ export default function BeautyMenMassage() {
                         </p>
                     </div>
 
-        {/* Slider Container */}
+
         <div className="relative">
-          {/* Left Arrow */}
+
           {currentIndex > 0 && (
             <button
               onClick={prevSlide}
@@ -81,7 +81,6 @@ export default function BeautyMenMassage() {
             </button>
           )}
 
-          {/* Cards Container */}
           <div className="px-0 md:px-8">
             <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
               {getVisibleCards().map((service) => (
@@ -89,16 +88,14 @@ export default function BeautyMenMassage() {
                   key={service.id}
                   className="cursor-pointer transition-all duration-300 group"
                 >
-                  {/* Card with border */}
                   <div className="rounded-lg md:rounded-xl overflow-hidden border border-gray-200 bg-white hover:shadow-lg transition-all duration-300">
-                    {/* Text Container - Increased padding and min-height */}
+                 
                     <div className="p-4 md:p-6 bg-white min-h-[40px] md:min-h-[60px] flex items-center">
                       <h3 className="text-sm md:text-lg font-normal text-gray-900">
                         {service.title}
                       </h3>
                     </div>
                     
-                    {/* Image Container - Increased height */}
                     <div className="relative overflow-hidden">
                       <div className="w-full h-48 md:h-50">
                         <img
@@ -114,7 +111,6 @@ export default function BeautyMenMassage() {
             </div>
           </div>
 
-          {/* Right Arrow */}
           {currentIndex < maxIndex && (
             <button
               onClick={nextSlide}

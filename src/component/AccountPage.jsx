@@ -133,7 +133,7 @@ export default function AccountPage() {
   return (
     <div className="min-h-screen">
       <div className="max-w-2xl mx-auto bg-white min-h-screen">
-        {/* Header */}
+        
         <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center gap-4">
          <NavLink to="/help">
              <button
@@ -146,7 +146,7 @@ export default function AccountPage() {
           {currentPage === 'main' && <h1 className="text-xl font-semibold">Account</h1>}
         </div>
 
-        {/* Content */}
+        
         <div className="p-6">
           {renderPage()}
         </div>

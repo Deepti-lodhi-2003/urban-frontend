@@ -12,7 +12,6 @@ export default function WomenSlider() {
     const [error, setError] = useState(null);
     const [womenSalonCategory, setWomenSalonCategory] = useState(null);
 
-    // ✅ Target Category - Women's Salon & Spa
     const TARGET_CATEGORY_NAME = "Women's Salon & Spa";
     const TARGET_CATEGORY_SLUG = "womens-salon-spa";
 
@@ -31,18 +30,16 @@ export default function WomenSlider() {
                 setLoading(true);
                 setError(null);
                 
-                console.log('🔍 Fetching Women Salon & Spa services...');
+                // console.log(' Fetching Women Salon & Spa services...');
                 
-                // Fetch all services
                 const response = await fetchServices({
                     page: 1,
-                    limit: 100, // Fetch more to filter
+                    limit: 100,
                 });
 
                 if (response.success && response.data?.services) {
-                    console.log('✅ Total Services fetched:', response.data.services.length);
+                    // console.log(' Total Services fetched:', response.data.services.length);
                     
-                    // ✅ Filter only Women's Salon & Spa category services
                     const womenSalonServices = response.data.services.filter(service => {
                         const categoryName = service.category?.name;
                         const categorySlug = service.category?.slug;
@@ -51,7 +48,7 @@ export default function WomenSlider() {
                                categorySlug === TARGET_CATEGORY_SLUG;
                     });
 
-                    console.log('💅 Women Salon & Spa Services:', womenSalonServices.length);
+                    // console.log(' Women Salon & Spa Services:', womenSalonServices.length);
 
                     const fetchedServices = womenSalonServices.map(service => ({
                         id: service._id,
@@ -78,19 +75,19 @@ export default function WomenSlider() {
                             name: fetchedServices[0].categoryName,
                             slug: fetchedServices[0].categorySlug
                         });
-                        console.log('📁 Category Info:', {
-                            id: fetchedServices[0].categoryId,
-                            name: fetchedServices[0].categoryName
-                        });
+                        // console.log(' Category Info:', {
+                        //     id: fetchedServices[0].categoryId,
+                        //     name: fetchedServices[0].categoryName
+                        // });
                     }
 
                     setServices(fetchedServices);
                 } else {
-                    console.log('⚠️ No services found');
+                    // console.log(' No services found');
                     setServices([]);
                 }
             } catch (err) {
-                console.error('❌ Error loading women salon services:', err);
+                console.error('Error loading women salon services:', err);
                 setError('Failed to load services');
             } finally {
                 setLoading(false);
@@ -136,7 +133,6 @@ export default function WomenSlider() {
 
     const handleSeeAll = () => {
         if (womenSalonCategory) {
-            // Navigate to category page with category ID
             const urlFriendlyName = womenSalonCategory.slug || womenSalonCategory.name
                 .toLowerCase()
                 .replace(/[^a-z0-9]+/g, '-')
@@ -144,7 +140,6 @@ export default function WomenSlider() {
             
             navigate(`/category/${urlFriendlyName}/${womenSalonCategory._id}`);
         } else {
-            // Fallback to services page
             navigate('/services');
         }
     };

@@ -163,17 +163,17 @@ export default function ProviderForm() {
         formDataToSend.append('certificate', files.certificate);
       }
 
-      console.log('Submitting provider registration...');
-      console.log('Business Name:', formData.businessName);
-      console.log('Experience:', formData.experience);
-      console.log('Skills:', formData.skills);
-      console.log('Category ID:', formData.categories);
-      console.log('Service Area:', formData.serviceArea);
-      console.log('Files:', {
-        aadhar: files.aadhar?.name,
-        pan: files.pan?.name,
-        certificate: files.certificate?.name
-      });
+      // console.log('Submitting provider registration...');
+      // console.log('Business Name:', formData.businessName);
+      // console.log('Experience:', formData.experience);
+      // console.log('Skills:', formData.skills);
+      // console.log('Category ID:', formData.categories);
+      // console.log('Service Area:', formData.serviceArea);
+      // console.log('Files:', {
+      //   aadhar: files.aadhar?.name,
+      //   pan: files.pan?.name,
+      //   certificate: files.certificate?.name
+      // });
 
      
       const response = await axios.post(
@@ -187,7 +187,7 @@ export default function ProviderForm() {
         }
       );
 
-      console.log('Registration successful:', response.data);
+      // console.log('Registration successful:', response.data);
 
       if (response.data.success) {
         setSubmitSuccess(true);
@@ -256,7 +256,7 @@ export default function ProviderForm() {
 
           <div className="mb-5 md:mb-6">
             <div className="space-y-3">
-              <div>
+              {/* <div>
                 <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-1 md:mb-2">
                   Business Name
                 </label>
@@ -268,7 +268,7 @@ export default function ProviderForm() {
                   className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition"
                   placeholder="Enter your business name"
                 />
-              </div>
+              </div> */}
 
               <div>
                 <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-1 md:mb-2">
@@ -449,7 +449,7 @@ export default function ProviderForm() {
             </div>
           </div>
 
-          <div className="mb-5 md:mb-6">
+          {/* <div className="mb-5 md:mb-6">
             <div className="space-y-3">
               {['aadhar', 'pan', 'certificate'].map(docType => (
                 <div key={docType}>
@@ -496,7 +496,7 @@ export default function ProviderForm() {
                 </div>
               ))}
             </div>
-          </div>
+          </div> */}
 
           <div className="flex items-center justify-center pt-4 md:pt-6 border-t border-gray-200">
             <button

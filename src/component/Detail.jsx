@@ -12,7 +12,7 @@ export default function Details() {
     const navigate = useNavigate();
     const [cart, setCart] = useState(null);
     const [showAllOffers, setShowAllOffers] = useState(false);
-    const [showModal, setShowModal] = useState(true);
+    const [showModal, setShowModal] = useState(false);
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [loadingItems, setLoadingItems] = useState({});
     const [services, setServices] = useState([]);
@@ -89,11 +89,11 @@ export default function Details() {
         const token = localStorage.getItem('authToken');
         const loggedIn = !!token;
         setIsLoggedIn(loggedIn);
-        console.log('🔐 Login Status Check:', {
-            isLoggedIn: loggedIn,
-            hasToken: !!token,
-            tokenLength: token ? token.length : 0
-        });
+        // console.log(' Login Status Check:', {
+        //     isLoggedIn: loggedIn,
+        //     hasToken: !!token,
+        //     tokenLength: token ? token.length : 0
+        // });
         return loggedIn;
     };
 
@@ -111,7 +111,6 @@ export default function Details() {
                 if (serviceId) {
                     const foundService = allServices.find(s => s._id === serviceId);
                     if (foundService) {
-                        // ✅ Category video ko store kar rahe hain
                         setCurrentService({
                             id: foundService._id,
                             name: foundService.name,
@@ -121,10 +120,10 @@ export default function Details() {
                             categoryId: foundService.category?._id,
                             images: foundService.images || [],
                             description: foundService.description || '',
-                            categoryVideo: foundService.category?.video || null  // ✅ Category ka video
+                            categoryVideo: foundService.category?.video || null
                         });
 
-                        console.log('🎬 Category Video Found:', foundService.category?.video);
+                        // console.log(' Category Video Found:', foundService.category?.video);
 
                         const sameCategoryServices = allServices.filter(s =>
                             s.category?._id === foundService.category?._id
@@ -159,14 +158,14 @@ export default function Details() {
                                     : `${service.images[0]}`)
                                 : 'https://via.placeholder.com/150',
                             duration: service.duration,
-                            categoryVideo: service.category?.video || null  // ✅ Category video
+                            categoryVideo: service.category?.video || null
                         }));
 
                         setCategoryServices(formattedCategoryServices);
 
                         const pageServiceIds = formattedCategoryServices.map(s => s.id);
                         setCurrentPageServiceIds(pageServiceIds);
-                        console.log('Current page service IDs:', pageServiceIds);
+                        // console.log('Current page service IDs:', pageServiceIds);
                     }
                 }
             }
@@ -190,14 +189,14 @@ export default function Details() {
         try {
             const token = localStorage.getItem('authToken');
             if (!token) {
-                console.log('No token found, cart set to null');
+                // console.log('No token found, cart set to null');
                 setCart(null);
                 return;
             }
 
             const response = await getCart();
             if (response.success) {
-                console.log('Full cart loaded:', response.data);
+                // console.log('Full cart loaded:', response.data);
                 setCart(response.data);
                 window.dispatchEvent(new CustomEvent('cartUpdated'));
             }
@@ -287,7 +286,7 @@ export default function Details() {
             currentPageServiceIds.includes(item.service._id)
         );
 
-        console.log('Filtered cart items for current page:', filtered);
+        // console.log('Filtered cart items for current page:', filtered);
         return filtered;
     };
 
@@ -327,20 +326,16 @@ export default function Details() {
         return num.toString();
     };
 
-    // ✅ Updated getVideoSource function - Category video use karega
     const getVideoSource = () => {
-        // Current service ki category ka video
         if (currentService?.categoryVideo) {
-            console.log('🎬 Using category video:', currentService.categoryVideo);
+            // console.log(' Using category video:', currentService.categoryVideo);
             return currentService.categoryVideo;
         }
 
-        // Fallback: Default video
-        console.log('⚠️ No category video found, using fallback');
+        // console.log(' No category video found, using fallback');
         return "https://content.urbancompany.com/videos/supply/customer-app-supply/1749625423509-fd8c48/1749625423509-fd8c48.m3u8";
     };
 
-    // ✅ Video type detect karne ke liye helper function
     const getVideoType = (url) => {
         if (url.includes('.mp4')) {
             return 'video/mp4';
@@ -349,11 +344,11 @@ export default function Details() {
         } else if (url.includes('.m3u8')) {
             return 'application/x-mpegURL';
         }
-        return 'video/mp4'; // default
+        return 'video/mp4';
     };
 
     const handleLoginSuccess = () => {
-        console.log('Login successful - updating state');
+        // console.log('Login successful - updating state');
         setIsLoggedIn(true);
         checkLoginStatus();
         loadCart();
@@ -401,12 +396,21 @@ export default function Details() {
                 .animate-progress {
                     animation: progress 5s ease-in-out infinite;
                 }
+                
+                /*  Scrollbar Hide CSS */
+                .scrollbar-hide::-webkit-scrollbar {
+                    display: none;
+                }
+                .scrollbar-hide {
+                    -ms-overflow-style: none;
+                    scrollbar-width: none;
+                }
             `}</style>
 
             <div className="min-h-screen">
                 <div className="flex flex-col lg:flex-row min-h-screen lg:h-screen px-4 md:px-7 gap-5 mt-10">
-                    {/* Left Sidebar */}
-                    <div className="w-full lg:w-92 bg-white p-4 md:p-6 lg:overflow-y-auto flex-shrink-0">
+                    
+                    <div className="w-full lg:w-92 bg-white p-4 md:p-6 lg:overflow-y-auto scrollbar-hide flex-shrink-0">
                         <div className="mb-6">
                             <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
                                 {currentService ? currentService.name : 'Service Details'}
@@ -469,12 +473,11 @@ export default function Details() {
                         </div>
                     </div>
 
-                    {/* Center Content */}
-                    <div className="flex-1 lg:overflow-y-auto">
-                        {/* ✅ Updated Video Section with Dynamic Category Video */}
+                   
+                    <div className="flex-1 lg:overflow-y-auto scrollbar-hide">
                         <div className="relative overflow-hidden mb-6 md:mb-10 rounded-lg">
                             <video
-                                key={getVideoSource()} // ✅ Video change hone par re-render hoga
+                                key={getVideoSource()}
                                 playsInline
                                 crossOrigin="anonymous"
                                 poster="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAC0AQMAAADfKmdSAAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAANQTFRF9fX1sGmfigAAAB5JREFUeJztwTEBAAAAwqD1T20ND6AAAAAAAAAAfg0c1AABWiieBAAAAABJRU5ErkJggg=="
@@ -496,7 +499,7 @@ export default function Details() {
                             </div>
                         </div>
 
-                        {/* Services List */}
+                        
                         <div className="flex flex-col lg:flex-row gap-6 px-0 md:px-8 pb-8 lg:border-t border-gray-200 lg:border-l">
                             <div className="flex-1 lg:pt-8 lg:border-r border-gray-200 lg:pr-8">
                                 {loadingServices ? (
@@ -586,7 +589,7 @@ export default function Details() {
                                 )}
                             </div>
 
-                            {/* Right Sidebar - Cart */}
+                            
                             <div className="w-full lg:w-80 lg:pt-8 flex-shrink-0 lg:sticky lg:top-0 lg:h-fit">
                                 <div className="w-full space-y-6">
                                     <div className="rounded-lg border border-gray-200 p-4">
@@ -646,7 +649,7 @@ export default function Details() {
                                         )}
                                     </div>
 
-                                    {/* Offers */}
+                                   
                                     <div className="rounded-lg border border-gray-200 p-4 bg-white">
                                         <div className="flex items-start gap-3 mb-3">
                                             <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
@@ -686,7 +689,7 @@ export default function Details() {
                                         </button>
                                     </div>
 
-                                    {/* UC Promise */}
+                                   
                                     <div className="rounded-lg border border-gray-200 px-6 py-5">
                                         <div className="flex items-center justify-between mb-4">
                                             <h3 className="text-xl font-semibold text-gray-900">UC Promise</h3>

@@ -93,12 +93,11 @@ const handleVerify = async () => {
     console.log(' OTP Verification Response:', response.data);
 
     if (response.data.success && response.data.token) {
-      //  CRITICAL FIX: 'authToken' use karo, 'token' nahi!
       console.log(' Saving authToken:', response.data.token);
       localStorage.setItem('authToken', response.data.token); 
       localStorage.setItem('user', JSON.stringify(response.data.user));
       
-      // Verify token saved
+
       const savedToken = localStorage.getItem('authToken');
       console.log(' Token saved successfully:', !!savedToken);
       console.log('Token length:', savedToken?.length);

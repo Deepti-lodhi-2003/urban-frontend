@@ -104,11 +104,10 @@ export default function Beauty() {
 <Header/>
 
     <div className="min-h-screen bg-white pt-7">
-      {/* Main Container */}
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:py-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
-          
-          {/* Left Section - Services */}
+
           <div className="w-full flex flex-col">
             <div className="mb-6 md:mb-8 px-1 md:px-2">
               <h1 className="text-2xl md:text-4xl font-semibold text-gray-900">
@@ -121,7 +120,6 @@ export default function Beauty() {
                 What are you looking for?
               </h2>
 
-              {/* Services Grid */}
               <div className="grid grid-cols-3 sm:grid-cols-3 gap-5">
                 {services.map((service) => (
                   <div
@@ -146,7 +144,7 @@ export default function Beauty() {
               </div>
             </div>
 
-            {/* Stats Section */}
+
             <div className="flex items-center gap-10 sm:gap-18 mt-12">
               <div className="flex items-center gap-3">
                 <img src="https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_48,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/growth/home-screen/1693570188661-dba2e7.jpeg" alt="Rating" className="w-12 h-12" />
@@ -166,7 +164,6 @@ export default function Beauty() {
             </div>
           </div>
 
-          {/* Right Section - Single Image */}
           <div className="hidden lg:block h-[590px]">
             <img
               src="https://res.cloudinary.com/urbanclap/image/upload/t_high_res_template,q_auto:low,f_auto/dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/growth/home-screen/1719293199714-da733e.jpeg"
@@ -178,7 +175,6 @@ export default function Beauty() {
       </div>
     </div>
 
-    {/* Slider Section - In the spotlight */}
     <div className="w-full bg-white lg:py-8 px-4">
       <div className="max-w-7xl mx-auto">
         <div className="mb-6 md:mb-8 px-1 md:px-2">
@@ -186,7 +182,7 @@ export default function Beauty() {
         </div>
         
         <div className="relative">
-          {/* Left Arrow */}
+        
           {currentIndex > 0 && (
             <button
               onClick={prevSlide}
@@ -196,7 +192,7 @@ export default function Beauty() {
             </button>
           )}
 
-          {/* Slides Container */}
+        
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {getVisibleSlides().map((slide, idx) => (
               <div
@@ -212,7 +208,6 @@ export default function Beauty() {
             ))}
           </div>
 
-          {/* Right Arrow */}
           {currentIndex < slides.length - (isMobile ? 1 : 3) && (
             <button
               onClick={nextSlide}

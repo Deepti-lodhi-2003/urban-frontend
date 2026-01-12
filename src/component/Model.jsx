@@ -21,7 +21,7 @@ export default function Modal({ onClose }) {
         {showModal && (
             <div className="fixed inset-0 bg-black/80 bg-opacity-10 z-50 flex items-center justify-center px-4 pt-4 overflow-y-auto">
                 <div className="bg-white rounded-2xl max-w-2xl w-full my-8 relative">
-                    {/* Close Button */}
+                  
                     <button 
                         onClick={onClose}
                         className="sticky top-4 left-full ml-[-3rem] w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center z-10 hover:bg-gray-100"
@@ -31,9 +31,9 @@ export default function Modal({ onClose }) {
                         </svg>
                     </button>
 
-                    {/* Modal Content */}
+                   
                     <div className="p-6 max-h-[85vh] overflow-y-auto">
-                        {/* Video/Image Slider */}
+                      
                         <div className="relative overflow-hidden mb-6 md:mb-10 rounded-lg">
                         <video
                             playsInline
@@ -53,7 +53,7 @@ export default function Modal({ onClose }) {
 
                         {/* <video data-src="https://content.urbancompany.com/videos/supply/customer-app-supply/1749625423509-fd8c48/1749625423509-fd8c48.m3u8" playsinline="" crossorigin="anonymous" poster="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAC0AQMAAADfKmdSAAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAANQTFRF9fX1sGmfigAAAB5JREFUeJztwTEBAAAAwqD1T20ND6AAAAAAAAAAfg0c1AABWiieBAAAAABJRU5ErkJggg==" autoplay="" class="PMJaxbEb " style="aspect-ratio: 1.77778 / 1;" src="blob:https://www.urbancompany.com/aad91ead-7f67-468b-a533-e434aaba3ec8"><source src="https://content.urbancompany.com/videos/supply/customer-app-supply/1749625423509-fd8c48/1749625423509-fd8c48.m3u8"><track kind="captions" srclang="en" label="english_captions"></video> */}
 
-                        {/* Animated Progress Line */}
+                       
                         <div className="absolute bottom-5 left-0 w-full lg:w-[63vw] h-1 bg-gray-200 z-10">
                             <div className="h-full bg-white animate-progress"></div>
                         </div>
@@ -69,7 +69,7 @@ export default function Modal({ onClose }) {
                         `}</style>
                     </div>
 
-                        {/* Service Title */}
+                     
                         <h2 className="text-2xl font-bold mb-2">Intense bathroom cleaning</h2>
                         <div className="flex items-center gap-2 mb-4">
                             <Star className="w-4 h-4 fill-gray-600 text-gray-600" />
@@ -81,7 +81,7 @@ export default function Modal({ onClose }) {
                              Add more & save up to 18%
                                 </div></p>
 
-                        {/* Bathroom Options Slider */}
+                     
                         <div className="mb-6">
                             <div className="relative">
                                 <div className="flex gap-3 overflow-x-auto pb-4 scrollbar-hide">
@@ -117,7 +117,7 @@ export default function Modal({ onClose }) {
 
                         <div className="border-b border-gray-200 mb-6"></div>
 
-                        {/* Frequently Added Together */}
+                      
                         <div className="mb-6">
                             <h3 className="text-xl font-bold mb-4">Frequently added together</h3>
                             <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
@@ -156,7 +156,7 @@ export default function Modal({ onClose }) {
 
                         <div className="border-b border-gray-200 mb-6"></div>
 
-                        {/* See the Difference */}
+                       
                         <div className="mb-6">
                             {/* <h3 className="text-xl font-bold mb-4">See the difference yourself</h3>
                             <div className="grid grid-cols-2 gap-2">
@@ -184,7 +184,7 @@ export default function Modal({ onClose }) {
 
                         <div className="border-b border-gray-200 mb-6"></div>
 
-                        {/* Top Cleaners */}
+                       
                         <div className="mb-6">
                             {/* <h3 className="text-xl font-bold mb-4">Top cleaners</h3>
                             <div className="bg-gray-50 rounded-lg p-4 flex items-start gap-4">
@@ -223,7 +223,7 @@ export default function Modal({ onClose }) {
 
                         <div className="border-b border-gray-200 mb-6"></div>
 
-                        {/* Cleaning Equipment */}
+                       
                         <div className="mb-6">
                             {/* <h3 className="text-xl font-bold mb-4">Our cleaning equipments</h3>
                             <div className="grid grid-cols-3 gap-4">
@@ -252,7 +252,7 @@ export default function Modal({ onClose }) {
 
                         <div className="border-b border-gray-200 mb-6"></div>
 
-                        {/* What is Covered */}
+                       
                         <div className="mb-6">
                            <img src="https://res.cloudinary.com/urbanclap/image/upload/t_high_res_template,q_auto:low,f_auto/w_999,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/supply/customer-app-supply/1749809678862-276d4a.jpeg" alt="" />
 
@@ -293,7 +293,7 @@ export default function Modal({ onClose }) {
 
                         <div className="border-b border-gray-200 mb-6"></div>
 
-                        {/* What We Need */}
+                      
                         <div className="mb-6">
                             {/* <h3 className="text-xl font-bold mb-4">What we will need from you</h3>
                             <div className="grid grid-cols-3 gap-3">
@@ -329,7 +329,7 @@ export default function Modal({ onClose }) {
 
                         <div className="border-b border-gray-200 mb-6"></div>
 
-                        {/* What is Not Covered */}
+                       
                         <div className="mb-6">
                             {/* <h3 className="text-xl font-bold mb-4">What is not covered</h3>
                             <div className="space-y-3">
@@ -357,7 +357,7 @@ export default function Modal({ onClose }) {
 
                         <div className="border-b border-gray-200 mb-6"></div>
 
-                        {/* Damage Protection */}
+                       
                         <div className="mb-6">
                             {/* <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                                 <div className="flex items-start gap-3">
@@ -378,7 +378,7 @@ export default function Modal({ onClose }) {
 
                         <div className="border-b border-gray-200 mb-6"></div>
 
-                        {/* FAQ Section */}
+                      
                         <div className="mb-6">
                             <h3 className="text-xl font-bold mb-4">Frequently asked questions</h3>
                             <div className="space-y-3">
@@ -395,7 +395,7 @@ export default function Modal({ onClose }) {
 
                         <div className="border-b border-gray-200 mb-6"></div>
 
-                        {/* Reviews Section */}
+                     
                         <div className="mb-6">
                             <div className="flex items-center justify-between mb-4">
                                 <h3 className="text-xl font-bold">⭐4.79</h3>
@@ -403,7 +403,7 @@ export default function Modal({ onClose }) {
                             </div>
                             <p className="text-sm text-gray-600 mb-4">4.0M reviews</p>
                             
-                            {/* Rating bars */}
+                          
                             <div className="space-y-2 mb-6">
                                 <div className="flex items-center gap-2">
                                     <span className="text-xs w-6">⭐5</span>
@@ -442,17 +442,17 @@ export default function Modal({ onClose }) {
                                 </div>
                             </div>
 
-                            {/* All Reviews Header */}
+                           
                             <h4 className="font-bold text-lg mb-3">All reviews</h4>
 
-                        {/* Filter buttons */}
+                       
                         <div className="flex gap-2 mb-4 overflow-x-auto">
                             <button className="px-4 py-2 border rounded-full text-sm whitespace-nowrap">Most detailed</button>
                             <button className="px-4 py-2 border rounded-full text-sm whitespace-nowrap">In my area</button>
                             <button className="px-4 py-2 border rounded-full text-sm whitespace-nowrap">Frequent users</button>
                         </div>
 
-                        {/* Review Cards */}
+                       
                         <div className="space-y-4">
                             <div className="border-b pb-4">
                                 <div className="flex items-center justify-between mb-2">
@@ -503,7 +503,7 @@ export default function Modal({ onClose }) {
                         </div>
                     </div>
 
-                    {/* Bottom Action Bar */}
+                   
                     <div className="sticky bottom-0 mt-6 bg-white border-t border-gray-300 pt-4 -mx-6 px-6 flex items-center justify-between">
                         <div className="flex items-center gap-4 ">
                             <button 

@@ -12,7 +12,6 @@ export default function SalonForMen() {
     const [error, setError] = useState(null);
     const [menSalonCategory, setMenSalonCategory] = useState(null);
 
-    // ✅ Target Category - Men's Salon & Massage
     const TARGET_CATEGORY_NAME = "Men's Salon & Massage";
     const TARGET_CATEGORY_SLUG = "mens-salon-massage";
 
@@ -33,18 +32,17 @@ export default function SalonForMen() {
                 setLoading(true);
                 setError(null);
                 
-                console.log("🔍 Fetching Men's Salon & Massage services...");
+                // console.log(" Fetching Men's Salon & Massage services...");
                 
-                // Fetch all services
                 const response = await fetchServices({
                     page: 1,
-                    limit: 100, // Fetch more to filter
+                    limit: 100, 
                 });
 
                 if (response.success && response.data?.services) {
-                    console.log('✅ Total Services fetched:', response.data.services.length);
+                    // console.log('Total Services fetched:', response.data.services.length);
                     
-                    // ✅ Filter only Men's Salon & Massage category services
+                   
                     const menSalonServices = response.data.services.filter(service => {
                         const categoryName = service.category?.name;
                         const categorySlug = service.category?.slug;
@@ -53,7 +51,7 @@ export default function SalonForMen() {
                                categorySlug === TARGET_CATEGORY_SLUG;
                     });
 
-                    console.log("💈 Men's Salon & Massage Services:", menSalonServices.length);
+                    // console.log(" Men's Salon & Massage Services:", menSalonServices.length);
 
                     const fetchedServices = menSalonServices.map(service => ({
                         id: service._id,
@@ -73,26 +71,25 @@ export default function SalonForMen() {
                             : null
                     }));
 
-                    // Store category info from first service
                     if (fetchedServices.length > 0 && fetchedServices[0].categoryId) {
                         setMenSalonCategory({
                             _id: fetchedServices[0].categoryId,
                             name: fetchedServices[0].categoryName,
                             slug: fetchedServices[0].categorySlug
                         });
-                        console.log('📁 Category Info:', {
-                            id: fetchedServices[0].categoryId,
-                            name: fetchedServices[0].categoryName
-                        });
+                        // console.log(' Category Info:', {
+                        //     id: fetchedServices[0].categoryId,
+                        //     name: fetchedServices[0].categoryName
+                        // });
                     }
 
                     setServices(fetchedServices);
                 } else {
-                    console.log('⚠️ No services found');
+                    // console.log(' No services found');
                     setServices([]);
                 }
             } catch (err) {
-                console.error("❌ Error loading men's salon services:", err);
+                console.error(" Error loading men's salon services:", err);
                 setError('Failed to load services');
             } finally {
                 setLoading(false);
@@ -138,7 +135,6 @@ export default function SalonForMen() {
 
     const handleSeeAll = () => {
         if (menSalonCategory) {
-            // Navigate to category page with category ID
             const urlFriendlyName = menSalonCategory.slug || menSalonCategory.name
                 .toLowerCase()
                 .replace(/[^a-z0-9]+/g, '-')
@@ -146,7 +142,6 @@ export default function SalonForMen() {
             
             navigate(`/category/${urlFriendlyName}/${menSalonCategory._id}`);
         } else {
-            // Fallback to services page
             navigate('/services');
         }
     };
@@ -216,7 +211,7 @@ export default function SalonForMen() {
     return (
         <div className="w-full bg-white py-8 md:py-12">
             <div className="max-w-[1400px] mx-auto px-4">
-                {/* Header */}
+           
                 <div className="mb-6 md:mb-8 px-1 md:px-2 flex items-start justify-between">
                     <div>
                         <div className="mb-2 md:mb-3 px-1 md:px-2">
@@ -236,9 +231,8 @@ export default function SalonForMen() {
                     </button>
                 </div>
 
-                {/* Slider Container */}
                 <div className="relative">
-                    {/* Cards Container */}
+                
                     <div className="px-0 md:px-8 relative z-10">
                         <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
                             {getVisibleCards().map((service) => (
@@ -247,7 +241,6 @@ export default function SalonForMen() {
                                     onClick={() => handleCardClick(service)}
                                     className="cursor-pointer transition-all duration-300 group"
                                 >
-                                    {/* Image Container */}
                                     <div className="relative overflow-hidden rounded-xl md:rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 bg-gray-100">
                                         <div className="w-full aspect-[4/3]">
                                             <img
@@ -260,7 +253,7 @@ export default function SalonForMen() {
                                                 }}
                                             />
                                         </div>
-                                        {/* Discount Badge */}
+                                     
                                         {service.discount && (
                                             <div className="absolute top-0 left-2 md:left-3 text-white text-[10px] md:text-xs font-bold px-1.5 md:px-2 py-1 md:py-1.4 z-10"
                                                 style={{
@@ -273,13 +266,11 @@ export default function SalonForMen() {
                                         )}
                                     </div>
 
-                                    {/* Text Container */}
                                     <div className="pt-2 md:pt-3">
                                         <h3 className="text-xs md:text-base font-semibold text-gray-900 line-clamp-2 mb-1 md:mb-2 group-hover:text-purple-600 transition-colors">
                                             {service.name}
                                         </h3>
 
-                                        {/* Rating */}
                                         <div className="flex items-center gap-1 mb-1 md:mb-2">
                                             <Star className="w-2 h-2 md:w-3 md:h-3 fill-gray-600 text-gray-600" />
                                             <span className="text-xs md:text-sm text-gray-600">
@@ -290,7 +281,6 @@ export default function SalonForMen() {
                                             </span>
                                         </div>
 
-                                        {/* Price */}
                                         <div className="flex items-center gap-2">
                                             <span className="text-sm md:text-base text-gray-700 font-semibold">
                                                 ₹{service.price}
@@ -307,7 +297,6 @@ export default function SalonForMen() {
                         </div>
                     </div>
 
-                    {/* Left Arrow */}
                     {currentIndex > 0 && (
                         <button
                             onClick={prevSlide}
@@ -318,7 +307,6 @@ export default function SalonForMen() {
                         </button>
                     )}
 
-                    {/* Right Arrow */}
                     {currentIndex < maxIndex && (
                         <button
                             onClick={nextSlide}

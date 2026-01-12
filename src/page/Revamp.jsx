@@ -92,17 +92,15 @@ export default function Revamp() {
 
 <Header/>
 
-            {/* First Slider - Beautiful walls */}
             <div className="w-full bg-white py-12 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-7xl mx-auto">
-                    {/* Header */}
+                
                     <div className="mb-8 px-5">
                         <h2 className="text-4xl font-semibold text-gray-900">Explore by space</h2>
                     </div>
 
-                    {/* Slider Container */}
                     <div className="relative px-5">
-                        {/* Left Arrow */}
+                  
                         {currentIndex2 > 0 && (
                             <button
                                 onClick={prevSlide2}
@@ -112,8 +110,6 @@ export default function Revamp() {
                                 <ChevronLeft className="w-6 h-6 text-gray-700" />
                             </button>
                         )}
-
-                        {/* Cards Container */}
                         <div className="overflow-hidden">
                             <div
                                 className="flex gap-6 transition-transform duration-500 ease-out"
@@ -125,14 +121,13 @@ export default function Revamp() {
                                         className={`flex-shrink-0 ${isMobile ? 'w-full' : 'w-[calc(33.333%-16px)]'}`}
                                     >
                                         <div className="relative rounded-2xl overflow-hidden h-133 group cursor-pointer">
-                                            {/* Background Image */}
+                                       
                                             <img
                                                 src={space.image}
                                                 alt={space.title}
                                                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                                             />
 
-                                            {/* Title */}
                                             <div className="absolute bottom-0 left-0 right-0 p-6">
                                                 <h3 className="text-white text-2xl font-semibold">{space.title}</h3>
                                             </div>
@@ -142,7 +137,6 @@ export default function Revamp() {
                             </div>
                         </div>
 
-                        {/* Right Arrow */}
                         {currentIndex2 < maxIndex2 && (
                             <button
                                 onClick={nextSlide2}
@@ -157,17 +151,15 @@ export default function Revamp() {
             </div>
 
 
-            {/* Second Slider - Explore by space */}
             <div className="w-full bg-white py-12 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-7xl mx-auto">
-                    {/* Header */}
+                
                     <div className="mb-8 px-5">
                         <h2 className="text-4xl font-semibold text-gray-900">Beautiful walls for all your needs</h2>
                     </div>
 
-                    {/* Slider Container */}
                     <div className="relative px-5">
-                        {/* Left Arrow */}
+                   
                         {currentIndex1 > 0 && (
                             <button
                                 onClick={prevSlide1}
@@ -177,8 +169,6 @@ export default function Revamp() {
                                 <ChevronLeft className="w-6 h-6 text-gray-700" />
                             </button>
                         )}
-
-                        {/* Cards Container */}
                         <div className="overflow-hidden">
                             <div
                                 className="flex gap-6 transition-transform duration-500 ease-out"
@@ -190,14 +180,13 @@ export default function Revamp() {
                                         className={`flex-shrink-0 ${isMobile ? 'w-full' : 'w-[calc(33.333%-16px)]'}`}
                                     >
                                         <div className="relative rounded-2xl overflow-hidden h-133 group cursor-pointer">
-                                            {/* Background Image */}
+                                          
                                             <img
                                                 src={space.image}
                                                 alt={space.title}
                                                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                                             />
 
-                                            {/* Title */}
                                             <div className="absolute bottom-0 left-0 right-0 p-6">
                                                 <h3 className="text-white text-2xl font-semibold">{space.title}</h3>
                                             </div>
@@ -207,7 +196,6 @@ export default function Revamp() {
                             </div>
                         </div>
 
-                        {/* Right Arrow */}
                         {currentIndex1 < maxIndex1 && (
                             <button
                                 onClick={nextSlide1}

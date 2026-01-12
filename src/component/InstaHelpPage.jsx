@@ -10,7 +10,7 @@ export default function InstaHelpPage() {
     <div className="min-h-screen">
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-6">
-          {/* Left Section - Separate */}
+          
           <div className="w-full lg:w-[20vw]">
             <div className="">
               <h1 className="text-3xl lg:text-4xl font-semibold text-gray-900 mb-4">Insta Help</h1>
@@ -27,17 +27,17 @@ export default function InstaHelpPage() {
             </div>
           </div>
 
-          {/* Middle and Right Section - Together with Gap */}
+     
           <div className="flex-1 flex flex-col lg:flex-row gap-6">
-            {/* Middle Section - Packages */}
+           
             <div className="flex-1">
               <div className="border lg:border-x lg:border-t border-gray-200 rounded-lg lg:rounded-none px-4 lg:px-6 pt-4 lg:pt-6">
                 <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4">Save more with packages</h2>
 
-                {/* Package 1 */}
+               
                 <div className="border-b border-gray-200 rounded-lg px-2 lg:px-4 py-6 lg:py-9 mb-4">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {/* Left Content */}
+                   
                     <div className="md:col-span-2">
                       <h3 className="font-bold text-gray-900 mb-1">Insta Help</h3>
                       <div className="flex items-center gap-2 mb-2">
@@ -57,7 +57,7 @@ export default function InstaHelpPage() {
                       </button>
                     </div>
 
-                    {/* Right Content - Image and Button */}
+                  
                     <div className="md:col-span-1 flex flex-row md:flex-col gap-4 md:gap-0">
                       <div className="rounded-lg overflow-hidden mb-0 md:mb-2 flex-1 h-32 md:h-auto">
                         <img
@@ -78,14 +78,14 @@ export default function InstaHelpPage() {
                   </div>
                 </div>
 
-                {/* Package 2 - Limited Period Offer */}
+               
                 <div className="border-b border-gray-200 rounded-lg px-2 lg:px-4 py-6 lg:py-7 relative">
                   <div className="bg-green-50 border border-green-200 text-green-700 text-xs font-semibold px-2 py-1 rounded inline-block mb-2">
                     LIMITED PERIOD OFFER
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {/* Left Content */}
+                   
                     <div className="md:col-span-2">
                       <h3 className="font-bold text-gray-900 mb-1">3 visits: Insta help saver pack</h3>
                       <div className="flex items-center gap-2 mb-2">
@@ -118,7 +118,7 @@ export default function InstaHelpPage() {
                       </button>
                     </div>
 
-                    {/* Right Content - Image and Button */}
+                  
                     <div className="md:col-span-1 flex flex-row md:flex-col gap-4 md:gap-0">
                       <div className="rounded-lg overflow-hidden mb-0 md:mb-2 flex-1 h-32 md:h-auto">
                         <img
@@ -141,9 +141,9 @@ export default function InstaHelpPage() {
               </div>
             </div>
 
-            {/* Right Section */}
+          
             <div className="w-full lg:w-[23vw] space-y-6">
-              {/* Cart */}
+             
               <div className="rounded-lg border border-gray-200">
                 <div className="flex flex-col items-center justify-center py-4">
                   <div className="relative w-32 h-24 mb-2">
@@ -172,7 +172,7 @@ export default function InstaHelpPage() {
                 </div>
               </div>
 
-              {/* UC Promise */}
+            
               <div className="rounded-lg border border-gray-200 px-6 py-5">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-xl font-semibold text-gray-900">UC Promise</h3>

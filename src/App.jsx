@@ -9,7 +9,7 @@ import InstaHelpPage from './component/InstaHelpPage'
 import Purchase from './component/Purchase'
 import Electrician from './component/Electrician'
 import Carpanter from './component/Carpanter'
-import Laptop from './component/Laptop'
+// import Laptop from './component/Laptop'
 import Detail from './component/Detail'
 import Checkout from './component/Checkout'
 import Modal from './component/Model'
@@ -34,7 +34,7 @@ const App = () => {
         <Route path="/purchase" element={<Purchase />} />
         <Route path="/electrician" element={<Electrician />} />
         <Route path="/carpanter" element={<Carpanter />} />
-        <Route path="/laptop" element={<Laptop />} />
+        {/* <Route path="/laptop" element={<Laptop />} /> */}
         <Route path="/service/:serviceName/:serviceId" element={<Detail />} />
         <Route path="/category/:categoryName/:categoryId" element={<CategoryPage />} />
         <Route path="/checkout" element={<Checkout />} />

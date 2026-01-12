@@ -21,7 +21,6 @@ export default function ProfileEditModal({ isOpen, onClose, userData, onProfileU
         email: userData.email || ''
       });
       
-      // Set initial image preview
       if (userData.profileImage) {
         const imageUrl = userData.profileImage.startsWith('http') 
           ? userData.profileImage 
@@ -47,7 +46,6 @@ export default function ProfileEditModal({ isOpen, onClose, userData, onProfileU
         return;
       }
       setProfileImage(file);
-      // Show local preview immediately
       const localPreview = URL.createObjectURL(file);
       setImagePreview(localPreview);
       setError('');
@@ -66,7 +64,6 @@ export default function ProfileEditModal({ isOpen, onClose, userData, onProfileU
         throw new Error('Please login again');
       }
 
-      // First, update profile image if selected
       let uploadedImageUrl = null;
       if (profileImage) {
         const imageFormData = new FormData();
@@ -81,13 +78,12 @@ export default function ProfileEditModal({ isOpen, onClose, userData, onProfileU
         });
 
         const imageData = await imageResponse.json();
-        console.log('Image upload response:', imageData);
+        // console.log('Image upload response:', imageData);
 
         if (!imageData.success) {
           throw new Error(imageData.message || 'Failed to upload image');
         }
 
-        // Get the uploaded image URL
         if (imageData.data?.profileImage) {
           uploadedImageUrl = imageData.data.profileImage.startsWith('http')
             ? imageData.data.profileImage
@@ -99,7 +95,6 @@ export default function ProfileEditModal({ isOpen, onClose, userData, onProfileU
         }
       }
 
-      // Then update basic profile info
       const response = await fetch(`${BASE_URL}/users/profile`, {
         method: 'PUT',
         headers: {
@@ -110,7 +105,7 @@ export default function ProfileEditModal({ isOpen, onClose, userData, onProfileU
       });
 
       const data = await response.json();
-      console.log('Profile update response:', data);
+      // console.log('Profile update response:', data);
 
       if (!data.success) {
         throw new Error(data.message || 'Failed to update profile');
@@ -118,7 +113,6 @@ export default function ProfileEditModal({ isOpen, onClose, userData, onProfileU
 
       setSuccess('Profile updated successfully!');
 
-      // Fetch complete updated profile data
       const updatedProfileResponse = await fetch(`${BASE_URL}/auth/me`, {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -126,13 +120,11 @@ export default function ProfileEditModal({ isOpen, onClose, userData, onProfileU
       });
       
       const updatedProfileData = await updatedProfileResponse.json();
-      console.log('Updated profile data:', updatedProfileData);
+      // console.log('Updated profile data:', updatedProfileData);
       
       if (updatedProfileData.success) {
-        // Update parent component with new data
         onProfileUpdate(updatedProfileData.data);
         
-        // Update local preview with final server image
         if (uploadedImageUrl) {
           setImagePreview(uploadedImageUrl);
         } else if (updatedProfileData.data?.profileImage) {
@@ -143,7 +135,6 @@ export default function ProfileEditModal({ isOpen, onClose, userData, onProfileU
         }
       }
 
-      // Clear the file input
       setProfileImage(null);
 
       setTimeout(() => {
@@ -199,7 +190,7 @@ export default function ProfileEditModal({ isOpen, onClose, userData, onProfileU
     <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center px-4">
       <div className="bg-white rounded-2xl max-w-md w-full relative max-h-[90vh] overflow-y-auto scrollbar-hide">
         
-        {/* Header */}
+
         <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-2xl z-10">
           <h2 className="text-xl font-semibold text-gray-900">Edit Profile</h2>
           <button
@@ -210,9 +201,9 @@ export default function ProfileEditModal({ isOpen, onClose, userData, onProfileU
           </button>
         </div>
 
-        {/* Main Content */}
+     
         <div className="p-6">
-          {/* Profile Picture */}
+       
           <div className="flex flex-col items-center mb-6">
             <div className="relative">
               <div className="w-24 h-24 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center overflow-hidden border-4 border-white shadow-lg">
@@ -244,9 +235,9 @@ export default function ProfileEditModal({ isOpen, onClose, userData, onProfileU
             <p className="text-xs text-gray-500 mt-2">Click camera icon to upload profile picture</p>
           </div>
 
-          {/* Form Fields */}
+        
           <div className="space-y-4">
-            {/* Name */}
+         
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Full Name
@@ -264,7 +255,7 @@ export default function ProfileEditModal({ isOpen, onClose, userData, onProfileU
               </div>
             </div>
 
-            {/* Email */}
+           
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Email Address
@@ -282,7 +273,7 @@ export default function ProfileEditModal({ isOpen, onClose, userData, onProfileU
               </div>
             </div>
 
-            {/* Phone (Read-only) */}
+     
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Phone Number
@@ -300,7 +291,7 @@ export default function ProfileEditModal({ isOpen, onClose, userData, onProfileU
             </div>
           </div>
 
-          {/* Error Message */}
+       
           {error && (
             <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start">
               <div className="flex-shrink-0">
@@ -312,7 +303,7 @@ export default function ProfileEditModal({ isOpen, onClose, userData, onProfileU
             </div>
           )}
 
-          {/* Success Message */}
+
           {success && (
             <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg flex items-start">
               <div className="flex-shrink-0">
@@ -324,7 +315,7 @@ export default function ProfileEditModal({ isOpen, onClose, userData, onProfileU
             </div>
           )}
 
-          {/* Action Buttons */}
+         
           <div className="mt-6 space-y-3">
             <button
               onClick={handleUpdateProfile}
@@ -353,7 +344,7 @@ export default function ProfileEditModal({ isOpen, onClose, userData, onProfileU
             </button>
           </div>
 
-          {/* Delete Account */}
+     
           <div className="mt-6 pt-6 border-t border-gray-200">
             <button
               onClick={handleDeleteAccount}
