@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, AlertCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { getImageUrl } from './Api'; 
 
 const BASE_URL = 'https://backend-urbancompany-1.onrender.com/api';
@@ -21,6 +22,7 @@ const fetchCategories = async () => {
 };
 
 export default function Slider() {
+  const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -48,25 +50,15 @@ export default function Slider() {
       setError(null);
       const response = await fetchCategories();
       
-      // console.log(' API Response:', response); 
-      
       if (response.success && response.data) {
         const activeCategories = response.data
           .filter(cat => cat.isActive)
           .sort((a, b) => (a.order || 0) - (b.order || 0));
         
-        console.log(' Active Categories:', activeCategories);
-        
-        
-        activeCategories.forEach(cat => {
-          // console.log(`📷 ${cat.name}:`, cat.image, '→', getImageUrl(cat.image));
-        });
-        
         setCategories(activeCategories);
       }
     } catch (err) {
       setError(err.message || 'Failed to load categories');
-      // console.error(' Error loading categories:', err);
     } finally {
       setLoading(false);
     }
@@ -81,7 +73,12 @@ export default function Slider() {
   };
 
   const handleSlideClick = (category) => {
-    window.location.href = `/category/${category.slug || category._id}`;
+    const urlFriendlyName = category.name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
+    
+navigate(`/category/${urlFriendlyName}/${category._id}`);
   };
 
   const getVisibleSlides = () => {
@@ -97,7 +94,6 @@ export default function Slider() {
     return visible;
   };
 
-
   if (loading) {
     return (
       <div className="w-full bg-white lg:py-8 px-4">
@@ -112,7 +108,6 @@ export default function Slider() {
       </div>
     );
   }
-
 
   if (error) {
     return (
@@ -139,7 +134,6 @@ export default function Slider() {
     );
   }
 
-
   if (categories.length === 0) {
     return (
       <div className="w-full bg-white lg:py-8 px-4">
@@ -163,7 +157,6 @@ export default function Slider() {
         </div>
         
         <div className="relative">
-     
           {currentIndex > 0 && (
             <button
               onClick={prevSlide}
@@ -174,7 +167,6 @@ export default function Slider() {
             </button>
           )}
 
-       
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {getVisibleSlides().map((category, idx) => (
               <div
@@ -188,18 +180,11 @@ export default function Slider() {
                     alt={category.name}
                     className="w-full h-auto aspect-[4/3] object-cover transition-transform duration-500 group-hover:scale-105"
                     loading="lazy"
-                    onLoad={() => console.log(' Image loaded:', category.name)}
                     onError={(e) => {
-                      console.error(' Image failed to load:', {
-                        category: category.name,
-                        originalPath: category.image,
-                        attemptedUrl: e.target.src
-                      });
                       e.target.onerror = null;
                       e.target.src = 'https://via.placeholder.com/394x295/e2e8f0/64748b?text=No+Image';
                     }}
                   />
-                  
                   
                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
                     <h3 className="text-white font-semibold text-lg">
@@ -216,7 +201,6 @@ export default function Slider() {
             ))}
           </div>
 
-        
           {currentIndex < categories.length - (isMobile ? 1 : 3) && (
             <button
               onClick={nextSlide}
@@ -228,7 +212,6 @@ export default function Slider() {
           )}
         </div>
 
-        
         {categories.length > (isMobile ? 1 : 3) && (
           <div className="flex justify-center gap-2 mt-6">
             {Array.from({ 

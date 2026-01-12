@@ -1,42 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Search, ShoppingCart, User, MapPin, ChevronDown, TrendingUp, X } from 'lucide-react';
+import { Search, ShoppingCart, User, MapPin, ChevronDown, TrendingUp, X, Edit2 } from 'lucide-react';
 import LoginModal from './LoginModal';
+import ProfileEditModal from './ProfileEditModal'; 
 import axiosInstance from '../instant/axios';
 import { globalSearch, getMyProfile } from '../page/Api';
 
+const SERVER_URL = 'https://backend-urbancompany-1.onrender.com';
 
 export default function UrbanCompanyHeader() {
-  // All states
+
   const [location, setLocation] = useState('Bhopal, Madhya Pradesh');
   const [currentCity, setCurrentCity] = useState('Bhopal');
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
   const [displayText, setDisplayText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false); 
   const [showToast, setShowToast] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [userData, setUserData] = useState(null);
 
-  // Search states
+
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState(null);
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [recentSearches, setRecentSearches] = useState([]);
 
-  // Location states
+ 
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [locationSearch, setLocationSearch] = useState('');
   const [isGettingLocation, setIsGettingLocation] = useState(false);
 
-  // Cart count
+
   const [cartCount, setCartCount] = useState(0);
 
   const placeholders = ['AC Service', 'Kitchen Cleaning', 'Facial'];
 
-  // Recent locations data
+
   const recentLocations = [
     { name: 'Bhopal', state: 'Madhya Pradesh, India', city: 'Bhopal' },
     { name: 'Connaught Place', state: 'New Delhi, India', city: 'Delhi' },
@@ -65,44 +68,37 @@ export default function UrbanCompanyHeader() {
     const fetchProfileFromAPI = async () => {
       const token = localStorage.getItem('authToken');
 
-      console.log(' Checking auth token...');
-      // console.log('Token exists:', !!token);
+      // console.log(' Checking auth token...');
 
       if (!token) {
-        // console.log(' No token found - User not logged in');
         setIsLoggedIn(false);
         setUserData(null);
         return;
       }
 
       try {
-        // console.log(' Fetching user profile from API...');
-        // console.log('API Endpoint: GET /auth/me');
+        console.log('📡 Fetching user profile from API...');
         
         const response = await getMyProfile();
-        
-        // console.log(' API Response:', response);
 
         if (response.success && response.data) {
-          // console.log(' Profile fetched successfully');
-          // console.log('User Name:', response.data.name);
-          // console.log('User Phone:', response.data.phone);
-          // console.log('User Email:', response.data.email);
+          console.log(' Profile fetched successfully');
+          console.log('User Name:', response.data.name);
+          console.log('User Phone:', response.data.phone);
+          console.log('Profile Image:', response.data.profileImage);
           
           setIsLoggedIn(true);
           setUserData(response.data);
           
-          
           fetchCartCount();
         } else {
-          // console.log(' API returned success: false');
           throw new Error('Profile fetch failed');
         }
       } catch (error) {
-        // console.error(' API Error:', error);
-        // console.log('Logging out user due to API error');
+        console.error(' API Error:', error);
+        console.log('Logging out user due to API error');
         
-        // logout
+        
         localStorage.removeItem('authToken');
         localStorage.removeItem('user');
         setIsLoggedIn(false);
@@ -113,7 +109,7 @@ export default function UrbanCompanyHeader() {
     fetchProfileFromAPI();
   }, []);
 
-  //  FETCH CART COUNT
+
   const fetchCartCount = async () => {
     try {
       const response = await axiosInstance.get('/cart/count');
@@ -125,7 +121,7 @@ export default function UrbanCompanyHeader() {
     }
   };
 
-  // Typing animation
+
   useEffect(() => {
     const currentPlaceholder = placeholders[placeholderIndex];
     const typingSpeed = isDeleting ? 50 : 100;
@@ -151,7 +147,7 @@ export default function UrbanCompanyHeader() {
     return () => clearTimeout(timer);
   }, [displayText, isDeleting, placeholderIndex]);
 
-  // Click outside handler
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (showUserMenu && !event.target.closest('.user-menu-wrapper')) {
@@ -166,7 +162,7 @@ export default function UrbanCompanyHeader() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [showUserMenu, showSearchDropdown]);
 
-  // Save search to recent searches
+
   const saveRecentSearch = (query) => {
     if (!query.trim()) return;
 
@@ -175,7 +171,7 @@ export default function UrbanCompanyHeader() {
     sessionStorage.setItem('recentSearches', JSON.stringify(updated));
   };
 
-  //  Search API handler with LOCATION FILTER
+
   const handleSearch = async (query) => {
     setSearchQuery(query);
 
@@ -211,7 +207,7 @@ export default function UrbanCompanyHeader() {
     setSearchResults(null);
   };
 
-  // GET CURRENT LOCATION using Geolocation API
+
   const useCurrentLocation = () => {
     setIsGettingLocation(true);
     setLocation('Getting location...');
@@ -226,7 +222,6 @@ export default function UrbanCompanyHeader() {
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
-        // console.log(' Got coordinates:', latitude, longitude);
 
         try {
           const response = await fetch(
@@ -303,7 +298,7 @@ export default function UrbanCompanyHeader() {
       console.error('Error fetching profile after login:', error);
       console.log('Logging out due to API error');
       
-      // API fail = logout
+
       localStorage.removeItem('authToken');
       localStorage.removeItem('user');
       setIsLoggedIn(false);
@@ -312,6 +307,17 @@ export default function UrbanCompanyHeader() {
     
     setShowToast(true);
     setTimeout(() => setShowToast(false), 3000);
+  };
+
+
+  const handleProfileUpdate = async (updatedData) => {
+    console.log(' Profile updated:', updatedData);
+    setUserData(updatedData);
+    setShowProfileModal(false);
+    
+ 
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 2000);
   };
 
   const handleLogout = () => {
@@ -323,6 +329,15 @@ export default function UrbanCompanyHeader() {
     setShowUserMenu(false);
     setCartCount(0);
     console.log(' Logout successful');
+  };
+
+
+  const getProfileImageUrl = (imagePath) => {
+    if (!imagePath) return null;
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+      return imagePath;
+    }
+    return `${SERVER_URL}${imagePath.startsWith('/') ? imagePath : '/' + imagePath}`;
   };
 
   return (
@@ -369,7 +384,7 @@ export default function UrbanCompanyHeader() {
               </nav>
             </div>
 
-            {/* Right side */}
+        
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-4 mr-15">
 
@@ -456,7 +471,7 @@ export default function UrbanCompanyHeader() {
                                   <div className="px-3 py-3 hover:bg-gray-50 cursor-pointer rounded-lg flex items-center gap-3 transition-colors">
                                     {service.images?.[0] && (
                                       <img
-                                        src={`https://backend-urbancompany-1.onrender.com${service.images[0]}`}
+                                        src={`${service.images[0]}`}
                                         alt={service.name}
                                         className="w-16 h-16 object-cover rounded-lg"
                                       />
@@ -520,16 +535,60 @@ export default function UrbanCompanyHeader() {
                   }}
                   className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
                 >
-                  <User className="w-5 h-5 text-gray-700" />
+                  {isLoggedIn && userData?.profileImage ? (
+                    <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-purple-500">
+                      <img
+                        src={getProfileImageUrl(userData.profileImage)}
+                        alt="Profile"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <User className="w-5 h-5 text-gray-700" />
+                  )}
                 </button>
 
                 {isLoggedIn && showUserMenu && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                  <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
                     {userData && (
                       <>
-                        <div className="px-4 py-2 border-b border-gray-200">
-                          <p className="text-sm font-semibold text-gray-900">{userData.name || 'User'}</p>
-                          <p className="text-xs text-gray-500">+91 {userData.phone}</p>
+                        <div className="px-4 py-3 border-b border-gray-200">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3 flex-1">
+                             
+                              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center overflow-hidden flex-shrink-0">
+                                {userData.profileImage ? (
+                                  <img
+                                    src={getProfileImageUrl(userData.profileImage)}
+                                    alt="Profile"
+                                    className="w-full h-full object-cover"
+                                  />
+                                ) : (
+                                  <User className="w-6 h-6 text-white" />
+                                )}
+                              </div>
+                              
+                         
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-semibold text-gray-900 truncate">
+                                  {userData.name || 'User'}
+                                </p>
+                                <p className="text-xs text-gray-500">+91 {userData.phone}</p>
+                              </div>
+                            </div>
+                            
+                           
+                            <button
+                              onClick={() => {
+                                setShowProfileModal(true);
+                                setShowUserMenu(false);
+                              }}
+                              className="p-2 hover:bg-gray-100 rounded-full transition-colors flex-shrink-0"
+                              title="Edit Profile"
+                            >
+                              <Edit2 className="w-4 h-4 text-gray-600" />
+                            </button>
+                          </div>
                         </div>
                       </>
                     )}
@@ -562,6 +621,14 @@ export default function UrbanCompanyHeader() {
         isOpen={showLoginModal}
         onClose={() => setShowLoginModal(false)}
         onLoginSuccess={handleLoginSuccess}
+      />
+
+     
+      <ProfileEditModal
+        isOpen={showProfileModal}
+        onClose={() => setShowProfileModal(false)}
+        userData={userData}
+        onProfileUpdate={handleProfileUpdate}
       />
 
       {showLocationModal && (

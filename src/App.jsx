@@ -17,10 +17,13 @@ import HelpPage from './component/HelpPage'
 import MyBookingsPage from './component/MyBookingPage'
 import AccountPage from './component/AccountPage'
 import CardPage from './component/CardPage'
+import ProviderForm from './page/ProviderForm'
+import CategoryPage from './component/CategoryPage'
+import ProfileEditModal from './component/ProfileEditModal'
 
 const App = () => {
   return (
-    <BrowserRouter>
+   
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/revamp" element={<Revamp />} />
@@ -33,6 +36,7 @@ const App = () => {
         <Route path="/carpanter" element={<Carpanter />} />
         <Route path="/laptop" element={<Laptop />} />
         <Route path="/service/:serviceName/:serviceId" element={<Detail />} />
+        <Route path="/category/:categoryName/:categoryId" element={<CategoryPage />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/model" element={<Modal />} />
         <Route path="/help" element={<HelpPage />} />
@@ -40,8 +44,10 @@ const App = () => {
         <Route path='/booking/:bookingId' element={<MyBookingsPage />} />
         <Route path="/account" element={<AccountPage />} />
         <Route path="/cart" element={<CardPage />} />
+         <Route path="/providerform" element={<ProviderForm/>} />
+          <Route path="/editprofile" element={<ProfileEditModal/>} />
       </Routes>
-    </BrowserRouter>
+
   )
 }
 

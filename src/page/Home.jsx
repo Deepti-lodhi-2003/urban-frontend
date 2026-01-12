@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from "../component/Header"
 import Slider from './Slider';
 import Slider2 from './Slider2';
@@ -11,13 +11,18 @@ import HomeRepair from './HomeRepair';
 import MassageMen from './MassageMen';
 import SalonForMen from './SalonForMen';
 import Footer from '../component/Footer';
-import ServiceCategoryModal from './ServiceCategoryModal'; // Import your modal component
+import ServiceCategoryModal from './ServiceCategoryModal'; 
 import { NavLink } from 'react-router-dom';
+import { fetchCategories, fetchServices, getImageUrl } from './Api';
 
 export default function Home() {
-  const [currentImageIndex, setCurrentImageIndex] = React.useState(0);
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [selectedCategory, setSelectedCategory] = React.useState(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [categories, setCategories] = useState([]);
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [servicesLoading, setServicesLoading] = useState(false);
   
   const instaHelpImages = [
     "https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_56,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/supply/customer-app-supply/1750845033589-98cdfb.jpeg",
@@ -26,144 +31,111 @@ export default function Home() {
     "https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_56,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/growth/home-screen/1678868062337-08bfc2.jpeg"
   ];
 
-  React.useEffect(() => {
+  // Fetch categories on component mount
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        setLoading(true);
+        const response = await fetchCategories();
+        
+        if (response.success && response.data) {
+          // Add Insta Help as first item
+          const instaHelp = {
+            _id: 'insta-help',
+            name: 'Insta Help',
+            image: instaHelpImages[0],
+            badge: 'NEW',
+            isInstaHelp: true,
+            isActive: true
+          };
+          
+          // Filter only active categories and sort by order
+          const activeCategories = response.data
+            .filter(cat => cat.isActive)
+            .sort((a, b) => (a.order || 0) - (b.order || 0));
+          
+          setCategories([instaHelp, ...activeCategories]);
+        }
+      } catch (error) {
+        console.error('Error loading categories:', error);
+        // Set empty array on error so UI doesn't break
+        setCategories([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadCategories();
+  }, []);
+
+  // Animate Insta Help images
+  useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex((prev) => (prev + 1) % instaHelpImages.length);
     }, 2000);
     return () => clearInterval(interval);
   }, []);
 
-  const services = [
-    {
-      id: 1,
-      name: "Insta Help",
-      image: "https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_56,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/supply/customer-app-supply/1750845033589-98cdfb.jpeg",
-      badge: "NEW",
-      subcategories: [
-        { id: 11, name: "Quick Repairs", icon: "🔧", price: 299 },
-        { id: 12, name: "Emergency Services", icon: "🚨", price: 499 },
-        { id: 13, name: "Home Inspection", icon: "🏠", price: 599 }
-      ]
-    },
-    {
-      id: 2,
-      name: "Women's Salon & Spa",
-      image: "https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_56,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/supply/customer-app-supply/1678864013225-bfc1de.jpeg",
-      badge: null,
-      description: "Professional beauty services at home",
-      subcategories: [
-        { id: 21, name: "Salon for Women", icon: "💇‍♀️", price: 399 },
-        { id: 22, name: "Spa for Women", icon: "💆‍♀️", price: 1299 },
-        { id: 23, name: "Hair Studio for Women", icon: "✂️", price: 599 },
-        { id: 24, name: "Makeup & Styling Studio", icon: "💄", price: 1999 }
-      ]
-    },
-    {
-      id: 3,
-      name: "Men's Salon & Massage",
-      image: "https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_56,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/supply/customer-app-supply/1750845033589-98cdfb.jpeg",
-      badge: null,
-      description: "Grooming services for men",
-      subcategories: [
-        { id: 31, name: "Men's Haircut", icon: "💈", price: 299 },
-        { id: 32, name: "Beard Styling", icon: "🧔", price: 199 },
-        { id: 33, name: "Massage Therapy", icon: "💆‍♂️", price: 899 },
-        { id: 34, name: "Facial for Men", icon: "🧖‍♂️", price: 599 }
-      ]
-    },
-    {
-      id: 4,
-      name: "Cleaning & Pest Control",
-      image: "https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_56,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/growth/luminosity/1699869110346-61ab83.jpeg",
-      badge: null,
-      description: "Keep your home clean and pest-free",
-      subcategories: [
-        { id: 41, name: "Bathroom Cleaning", icon: "🚿", price: 399 },
-        { id: 42, name: "Kitchen Cleaning", icon: "🍳", price: 499 },
-        { id: 43, name: "Pest Control", icon: "🐜", price: 699 },
-        { id: 44, name: "Full Home Cleaning", icon: "🏡", price: 1499 }
-      ]
-    },
-    {
-      id: 5,
-      name: "Electrician, Plumber & Carpenter",
-      image: "https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_56,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/growth/home-screen/1678868062337-08bfc2.jpeg",
-      badge: null,
-      description: "Expert home repair services",
-      subcategories: [
-        { id: 51, name: "Electrician", icon: "⚡", price: 199 },
-        { id: 52, name: "Plumber", icon: "🔧", price: 249 },
-        { id: 53, name: "Carpenter", icon: "🪚", price: 299 },
-        { id: 54, name: "Door Repair", icon: "🚪", price: 349 }
-      ]
-    },
-    {
-      id: 6,
-      name: "Native Water Purifier",
-      image: "https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_56,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/supply/customer-app-supply/1765884886041-216ec5.jpeg",
-      badge: null,
-      subcategories: [
-        { id: 61, name: "RO Installation", icon: "💧", price: 499 },
-        { id: 62, name: "RO Service", icon: "🔧", price: 299 },
-        { id: 63, name: "Water Testing", icon: "🧪", price: 199 }
-      ]
-    },
-    {
-      id: 7,
-      name: "Painting & Waterproofing",
-      image: "https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_56,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/growth/home-screen/1674120935535-f8d5c8.jpeg",
-      badge: null,
-      subcategories: [
-        { id: 71, name: "Wall Painting", icon: "🎨", price: 2999 },
-        { id: 72, name: "Waterproofing", icon: "💦", price: 4999 },
-        { id: 73, name: "Texture Painting", icon: "🖌️", price: 3499 }
-      ]
-    },
-    {
-      id: 8,
-      name: "AC & Appliance Repair",
-      image: "https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_56,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/growth/home-screen/1751547558710-5ff49a.jpeg",
-      badge: null,
-      subcategories: [
-        { id: 81, name: "AC Service", icon: "❄️", price: 399 },
-        { id: 82, name: "AC Repair", icon: "🔧", price: 599 },
-        { id: 83, name: "Washing Machine Repair", icon: "🧺", price: 349 },
-        { id: 84, name: "Refrigerator Repair", icon: "🧊", price: 449 }
-      ]
-    },
-    {
-      id: 9,
-      name: "Wall makeover by Revamp",
-      image: "https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_56,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/growth/luminosity/1724138391296-c1780b.jpeg",
-      badge: null,
-      subcategories: [
-        { id: 91, name: "Wall Design", icon: "🎨", price: 3999 },
-        { id: 92, name: "Wallpaper Installation", icon: "📜", price: 2499 },
-        { id: 93, name: "Wall Art", icon: "🖼️", price: 1999 }
-      ]
+  // Function to open modal with selected category and fetch services
+  const handleServiceClick = async (category) => {
+    // Don't open modal for Insta Help
+    if (category.isInstaHelp) {
+      return;
     }
-  ];
 
-  // Function to open modal with selected category
-  const handleServiceClick = (service) => {
-    setSelectedCategory({
-      name: service.name,
-      description: service.description || `Professional ${service.name} services`,
-      id: service.id
-    });
-    setIsModalOpen(true);
+    try {
+      setServicesLoading(true);
+      setSelectedCategory({
+        name: category.name,
+        description: category.description || `Professional ${category.name} services`,
+        id: category._id
+      });
+      setIsModalOpen(true);
+
+      // Fetch services for this category
+      const response = await fetchServices({
+        category: category._id,
+        limit: 50 // Get more services
+      });
+
+      if (response.success && response.data && response.data.services) {
+        // Transform API services to match modal format
+        const transformedServices = response.data.services.map(service => ({
+          id: service._id,
+          name: service.name,
+          icon: '🛠️', // Default icon
+          price: service.discountPrice || service.price,
+          originalPrice: service.price !== service.discountPrice ? service.price : null,
+          rating: service.rating || 0,
+          image: service.images && service.images.length > 0 ? service.images[0] : null,
+          duration: service.duration,
+          description: service.description
+        }));
+
+        setServices(transformedServices);
+      } else {
+        setServices([]);
+      }
+    } catch (error) {
+      console.error('Error fetching services:', error);
+      setServices([]);
+    } finally {
+      setServicesLoading(false);
+    }
   };
 
   // Function to close modal
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedCategory(null);
+    setServices([]);
   };
 
-  // Function to handle subcategory click
-  const handleSubcategoryClick = (subcategory) => {
-    console.log('Selected subcategory:', subcategory);
-    // Add your navigation or booking logic here
+  // Function to handle subcategory/service click
+  const handleSubcategoryClick = (service) => {
+    console.log('Selected service:', service);
+    // Navigate to service details page
+    window.location.href = `/service/${service.id}`;
     handleCloseModal();
   };
 
@@ -188,63 +160,87 @@ export default function Home() {
                   What are you looking for?
                 </h2>
 
-                {/* Services Grid */}
-                <div className="grid grid-cols-3 sm:grid-cols-3 gap-5">
-                  {services.map((service) => (
-                    <div
-                      key={service.id}
-                      className="relative transition-all group"
-                      onClick={() => handleServiceClick(service)}
-                    >
-                      {service.id === 1 ? (
-                        // Special Insta Help card with animation
-                        <NavLink to="/instahelp">
-                          <div className="flex flex-col items-center justify-center text-center cursor-pointer">
-                          <div className="relative mb-3 rounded-lg py-4 px-4 hover:bg-gray-100 cursor-pointer w-[25vw] sm:w-[10vw] flex items-center justify-center overflow-hidden" style={{backgroundColor:"rgba(245, 245, 245, 1.00)", height: "80px"}}>
-                            <span className="absolute top-1 right-1 bg-pink-600 text-white text-xs font-bold px-2 py-0.5 rounded z-10">
-                              NEW
-                            </span>
-                            {instaHelpImages.map((img, idx) => (
-                              <img 
-                                key={idx}
-                                src={img} 
-                                alt="Service" 
-                                className="w-12 h-12 object-contain absolute transition-all duration-500 ease-in-out"
-                                style={{
-                                  opacity: idx === currentImageIndex ? 1 : 0,
-                                  transform: idx === currentImageIndex 
-                                    ? 'translateY(0) scale(1)' 
-                                    : 'translateY(20px) scale(0.8)',
-                                }}
-                              />
-                            ))}
-                          </div>
-                          <p className="text-xs font-medium text-gray-700 leading-tight">
-                            {service.name}
-                          </p>
-                        </div>
-                        </NavLink>
-                      ) : (
-                        // Regular service cards
-                        <>
-                          {service.badge && (
-                            <span className="absolute top-2 right-2 bg-pink-600 text-white text-xs font-bold px-2 py-0.5 rounded z-10">
-                              {service.badge}
-                            </span>
-                          )}
-                          <div className="flex flex-col items-center justify-center text-center cursor-pointer">
-                            <div className="mb-3 rounded-lg py-4 px-4 hover:bg-gray-100 cursor-pointer w-[25vw] sm:w-[10vw] flex items-center justify-center" style={{backgroundColor:"rgba(245, 245, 245, 1.00)"}}>
-                              <img src={service.image} alt={service.name} className="w-14 h-14 object-contain" />
+                {/* Loading State */}
+                {loading ? (
+                  <div className="grid grid-cols-3 gap-5">
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
+                      <div key={i} className="flex flex-col items-center">
+                        <div className="w-[25vw] sm:w-[10vw] h-20 bg-gray-200 rounded-lg animate-pulse mb-3"></div>
+                        <div className="w-16 h-3 bg-gray-200 rounded animate-pulse"></div>
+                      </div>
+                    ))}
+                  </div>
+                ) : categories.length === 0 ? (
+                  // Empty State
+                  <div className="text-center py-8">
+                    <p className="text-gray-500">No categories available at the moment.</p>
+                  </div>
+                ) : (
+                  /* Services Grid */
+                  <div className="grid grid-cols-3 sm:grid-cols-3 gap-5">
+                    {categories.map((category) => (
+                      <div
+                        key={category._id}
+                        className="relative transition-all group"
+                        onClick={() => handleServiceClick(category)}
+                      >
+                        {category.isInstaHelp ? (
+                          // Special Insta Help card with animation
+                          <NavLink to="/instahelp">
+                            <div className="flex flex-col items-center justify-center text-center cursor-pointer">
+                              <div className="relative mb-3 rounded-lg py-4 px-4 hover:bg-gray-100 cursor-pointer w-[25vw] sm:w-[10vw] flex items-center justify-center overflow-hidden" style={{backgroundColor:"rgba(245, 245, 245, 1.00)", height: "80px"}}>
+                                <span className="absolute top-1 right-1 bg-pink-600 text-white text-xs font-bold px-2 py-0.5 rounded z-10">
+                                  NEW
+                                </span>
+                                {instaHelpImages.map((img, idx) => (
+                                  <img 
+                                    key={idx}
+                                    src={img} 
+                                    alt="Service" 
+                                    className="w-12 h-12 object-contain absolute transition-all duration-500 ease-in-out"
+                                    style={{
+                                      opacity: idx === currentImageIndex ? 1 : 0,
+                                      transform: idx === currentImageIndex 
+                                        ? 'translateY(0) scale(1)' 
+                                        : 'translateY(20px) scale(0.8)',
+                                    }}
+                                  />
+                                ))}
+                              </div>
+                              <p className="text-xs font-medium text-gray-700 leading-tight">
+                                {category.name}
+                              </p>
                             </div>
-                            <p className="text-xs font-medium text-gray-700 leading-tight">
-                              {service.name}
-                            </p>
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  ))}
-                </div>
+                          </NavLink>
+                        ) : (
+                          // Regular service cards from API
+                          <>
+                            {category.badge && (
+                              <span className="absolute top-2 right-2 bg-pink-600 text-white text-xs font-bold px-2 py-0.5 rounded z-10">
+                                {category.badge}
+                              </span>
+                            )}
+                            <div className="flex flex-col items-center justify-center text-center cursor-pointer">
+                              <div className="mb-3 rounded-lg py-4 px-4 hover:bg-gray-100 cursor-pointer w-[25vw] sm:w-[10vw] flex items-center justify-center" style={{backgroundColor:"rgba(245, 245, 245, 1.00)"}}>
+                                <img 
+                                  src={getImageUrl(category.image)} 
+                                  alt={category.name} 
+                                  className="w-14 h-14 object-contain"
+                                  onError={(e) => {
+                                    e.target.src = 'https://via.placeholder.com/56?text=Service';
+                                  }}
+                                />
+                              </div>
+                              <p className="text-xs font-medium text-gray-700 leading-tight">
+                                {category.name}
+                              </p>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* Stats Section */}
@@ -348,8 +344,9 @@ export default function Home() {
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         category={selectedCategory}
-        subcategories={selectedCategory ? services.find(s => s.id === selectedCategory.id)?.subcategories || [] : []}
+        subcategories={services}
         onSubcategoryClick={handleSubcategoryClick}
+        loading={servicesLoading}
       />
     </>
   );

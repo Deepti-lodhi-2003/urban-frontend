@@ -98,81 +98,84 @@ export default function Details() {
     };
 
     const loadServices = async () => {
-    try {
-        setLoadingServices(true);
-        const response = await fetchServices({
-            page: 1,
-            limit: 100,
-        });
+        try {
+            setLoadingServices(true);
+            const response = await fetchServices({
+                page: 1,
+                limit: 100,
+            });
 
-        if (response.success && response.data.services) {
-            const allServices = response.data.services;
+            if (response.success && response.data.services) {
+                const allServices = response.data.services;
 
-            if (serviceId) {
-                const foundService = allServices.find(s => s._id === serviceId);
-                if (foundService) {
-                    setCurrentService({
-                        id: foundService._id,
-                        name: foundService.name,
-                        rating: foundService.rating || 4.80,
-                        totalBookings: foundService.totalReviews || 312,
-                        category: foundService.category?.name || 'Services',
-                        categoryId: foundService.category?._id,
-                        images: foundService.images || [],
-                        description: foundService.description || '',
-                        video: foundService.video || null  
-                    });
+                if (serviceId) {
+                    const foundService = allServices.find(s => s._id === serviceId);
+                    if (foundService) {
+                        // ✅ Category video ko store kar rahe hain
+                        setCurrentService({
+                            id: foundService._id,
+                            name: foundService.name,
+                            rating: foundService.rating || 4.80,
+                            totalBookings: foundService.totalReviews || 312,
+                            category: foundService.category?.name || 'Services',
+                            categoryId: foundService.category?._id,
+                            images: foundService.images || [],
+                            description: foundService.description || '',
+                            categoryVideo: foundService.category?.video || null  // ✅ Category ka video
+                        });
 
-                    const sameCategoryServices = allServices.filter(s =>
-                        s.category?._id === foundService.category?._id
-                    );
+                        console.log('🎬 Category Video Found:', foundService.category?.video);
 
-                    const related = sameCategoryServices
-                        .filter(s => s._id !== foundService._id)
-                        .slice(0, 5)
-                        .map(s => ({
-                            label: s.name,
-                            image: s.images && s.images.length > 0
-                                ? (s.images[0].startsWith('http')
-                                    ? s.images[0]
-                                    : `https://backend-urbancompany-1.onrender.com${s.images[0]}`)
-                                : 'https://via.placeholder.com/64',
-                            id: s._id
+                        const sameCategoryServices = allServices.filter(s =>
+                            s.category?._id === foundService.category?._id
+                        );
+
+                        const related = sameCategoryServices
+                            .filter(s => s._id !== foundService._id)
+                            .slice(0, 5)
+                            .map(s => ({
+                                label: s.name,
+                                image: s.images && s.images.length > 0
+                                    ? (s.images[0].startsWith('http')
+                                        ? s.images[0]
+                                        : `${s.images[0]}`)
+                                    : 'https://via.placeholder.com/64',
+                                id: s._id
+                            }));
+
+                        setRelatedServices(related);
+
+                        const formattedCategoryServices = sameCategoryServices.map(service => ({
+                            id: service._id,
+                            name: service.name,
+                            rating: service.rating || 4.5,
+                            reviews: service.totalReviews ? `${(service.totalReviews / 1000).toFixed(1)}K` : '0',
+                            price: service.price,
+                            discountPrice: service.discountPrice,
+                            description: service.description,
+                            image: service.images && service.images.length > 0
+                                ? (service.images[0].startsWith('http')
+                                    ? service.images[0]
+                                    : `${service.images[0]}`)
+                                : 'https://via.placeholder.com/150',
+                            duration: service.duration,
+                            categoryVideo: service.category?.video || null  // ✅ Category video
                         }));
 
-                    setRelatedServices(related);
+                        setCategoryServices(formattedCategoryServices);
 
-                    const formattedCategoryServices = sameCategoryServices.map(service => ({
-                        id: service._id,
-                        name: service.name,
-                        rating: service.rating || 4.5,
-                        reviews: service.totalReviews ? `${(service.totalReviews / 1000).toFixed(1)}K` : '0',
-                        price: service.price,
-                        discountPrice: service.discountPrice,
-                        description: service.description,
-                        image: service.images && service.images.length > 0
-                            ? (service.images[0].startsWith('http')
-                                ? service.images[0]
-                                : `https://backend-urbancompany-1.onrender.com${service.images[0]}`)
-                            : 'https://via.placeholder.com/150',
-                        duration: service.duration,
-                        video: service.video || null 
-                    }));
-
-                    setCategoryServices(formattedCategoryServices);
-
-                    const pageServiceIds = formattedCategoryServices.map(s => s.id);
-                    setCurrentPageServiceIds(pageServiceIds);
-                    console.log(' Current page service IDs:', pageServiceIds);
+                        const pageServiceIds = formattedCategoryServices.map(s => s.id);
+                        setCurrentPageServiceIds(pageServiceIds);
+                        console.log('Current page service IDs:', pageServiceIds);
+                    }
                 }
             }
+        } catch (error) {
+            console.error('Error loading services:', error);
+        } finally {
+            setLoadingServices(false);
         }
-    } catch (error) {
-        console.error('Error loading services:', error);
-    } finally {
-        setLoadingServices(false);
-    }
-};
+    };
 
     const handleServiceClick = (serviceId) => {
         const service = [...relatedServices].find(s => s.id === serviceId);
@@ -324,25 +327,30 @@ export default function Details() {
         return num.toString();
     };
 
-    
-const getVideoSource = () => {
-    //  First priority: Current service se video
-    if (currentService?.video) {
-        console.log('Using service video:', currentService.video);
-        return currentService.video;
-    }
-    
-    // Second priority: Category services se first video
-    const serviceWithVideo = categoryServices.find(s => s.video);
-    if (serviceWithVideo?.video) {
-        console.log(' Using category service video:', serviceWithVideo.video);
-        return serviceWithVideo.video;
-    }
-    
-    // Fallback: Default placeholder video
-    console.log(' Using fallback video');
-    return "https://content.urbancompany.com/videos/supply/customer-app-supply/1749625423509-fd8c48/1749625423509-fd8c48.m3u8";
-};
+    // ✅ Updated getVideoSource function - Category video use karega
+    const getVideoSource = () => {
+        // Current service ki category ka video
+        if (currentService?.categoryVideo) {
+            console.log('🎬 Using category video:', currentService.categoryVideo);
+            return currentService.categoryVideo;
+        }
+
+        // Fallback: Default video
+        console.log('⚠️ No category video found, using fallback');
+        return "https://content.urbancompany.com/videos/supply/customer-app-supply/1749625423509-fd8c48/1749625423509-fd8c48.m3u8";
+    };
+
+    // ✅ Video type detect karne ke liye helper function
+    const getVideoType = (url) => {
+        if (url.includes('.mp4')) {
+            return 'video/mp4';
+        } else if (url.includes('.webm')) {
+            return 'video/webm';
+        } else if (url.includes('.m3u8')) {
+            return 'application/x-mpegURL';
+        }
+        return 'video/mp4'; // default
+    };
 
     const handleLoginSuccess = () => {
         console.log('Login successful - updating state');
@@ -463,8 +471,10 @@ const getVideoSource = () => {
 
                     {/* Center Content */}
                     <div className="flex-1 lg:overflow-y-auto">
+                        {/* ✅ Updated Video Section with Dynamic Category Video */}
                         <div className="relative overflow-hidden mb-6 md:mb-10 rounded-lg">
                             <video
+                                key={getVideoSource()} // ✅ Video change hone par re-render hoga
                                 playsInline
                                 crossOrigin="anonymous"
                                 poster="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAC0AQMAAADfKmdSAAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAANQTFRF9fX1sGmfigAAAB5JREFUeJztwTEBAAAAwqD1T20ND6AAAAAAAAAAfg0c1AABWiieBAAAAABJRU5ErkJggg=="
@@ -474,7 +484,11 @@ const getVideoSource = () => {
                                 className="w-full lg:w-[63vw] rounded-lg"
                                 style={{ aspectRatio: "16 / 9" }}
                             >
-                                <source src={getVideoSource()} type="video/mp4" />
+                                <source 
+                                    src={getVideoSource()} 
+                                    type={getVideoType(getVideoSource())} 
+                                />
+                                Your browser does not support the video tag.
                             </video>
 
                             <div className="absolute bottom-5 left-0 w-full lg:w-[63vw] h-1 bg-gray-200 z-10">
@@ -592,7 +606,7 @@ const getVideoSource = () => {
                                                 {currentPageItems.map((item, idx) => {
                                                     const itemPrice = item.discountPrice || item.price;
                                                     const itemTotal = itemPrice * item.quantity;
-                                                    
+
                                                     return (
                                                         <div key={idx} className="rounded-lg p-4 mb-4 border border-gray-100">
                                                             <div className="flex items-start justify-between gap-3 mb-3">

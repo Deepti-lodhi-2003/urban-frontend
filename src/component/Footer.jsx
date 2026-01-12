@@ -1,5 +1,6 @@
 import React from 'react';
 import { Twitter, Facebook, Instagram, Linkedin } from 'lucide-react';
+import { NavLink } from 'react-router-dom';
 
 export default function Footer() {
   return (
@@ -44,7 +45,9 @@ export default function Footer() {
           <div>
             <h3 className="text-gray-900 font-semibold text-xl mb-3">For professionals</h3>
             <ul className="space-y-1.5">
-              <li><a href="#" className="text-gray-600 hover:text-gray-900 text-sm">Register as a professional</a></li>
+              <NavLink to="/providerform">
+                <li><a href="#" className="text-gray-600 hover:text-gray-900 text-sm">Register as a professional</a></li>
+              </NavLink>
             </ul>
           </div>
 

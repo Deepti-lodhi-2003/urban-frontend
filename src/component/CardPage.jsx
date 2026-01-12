@@ -1,3 +1,5 @@
+// ================== CardPage.jsx - Updated Complete Code ==================
+
 import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ShoppingCart } from 'lucide-react';
@@ -12,6 +14,18 @@ export default function CardPage() {
 
   useEffect(() => {
     loadCart();
+    
+    // ✅ Listen for booking success event to clear cart
+    const handleBookingSuccess = () => {
+      console.log('🎉 Booking successful! Reloading cart...');
+      loadCart(); // Reload cart to show it's empty
+    };
+    
+    window.addEventListener('bookingSuccess', handleBookingSuccess);
+    
+    return () => {
+      window.removeEventListener('bookingSuccess', handleBookingSuccess);
+    };
   }, []);
 
   const loadCart = async () => {
@@ -60,7 +74,9 @@ export default function CardPage() {
       quantity: item.quantity,
       price: item.price,
       discountPrice: item.discountPrice,
-      totalPrice: (item.discountPrice || item.price) * item.quantity
+      totalPrice: (item.discountPrice || item.price) * item.quantity,
+      // ✅ Store service ID to clear from cart after booking
+      serviceId: item.service._id
     };
     
     sessionStorage.setItem('checkoutItem', JSON.stringify(checkoutItem));
@@ -225,3 +241,40 @@ export default function CardPage() {
    </>
   );
 }
+
+
+// ================== CheckoutPage.jsx - Add this after booking success ==================
+
+// Jab booking successful ho, tab cart clear karo
+const handleBookingSuccess = async (bookingId) => {
+  try {
+    // Get checkout item to know which service to remove
+    const checkoutItem = JSON.parse(sessionStorage.getItem('checkoutItem') || '{}');
+    
+    if (checkoutItem.serviceId) {
+      // ✅ Remove item from cart
+      await removeFromCart(checkoutItem.serviceId);
+      console.log('✅ Item removed from cart');
+      
+      // ✅ Trigger cart reload event
+      window.dispatchEvent(new Event('bookingSuccess'));
+      
+      // Clear session storage
+      sessionStorage.removeItem('checkoutItem');
+    }
+    
+    // Navigate to booking details
+    navigate(`/booking/${bookingId}`);
+  } catch (error) {
+    console.error('Error clearing cart:', error);
+    // Navigate anyway even if cart clear fails
+    navigate(`/booking/${bookingId}`);
+  }
+};
+
+// Use this function after successful booking creation
+// Example:
+// const response = await createBooking(bookingData);
+// if (response.success) {
+//   await handleBookingSuccess(response.data._id);
+// }
