@@ -22,6 +22,8 @@ export default function Details() {
     const [categoryServices, setCategoryServices] = useState([]);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [currentPageServiceIds, setCurrentPageServiceIds] = useState([]);
+    const [videoLoading, setVideoLoading] = useState(true);
+    const [videoError, setVideoError] = useState(false);
 
     const allOffers = [
         {
@@ -66,6 +68,8 @@ export default function Details() {
         checkLoginStatus();
         loadCart();
         loadServices();
+        setVideoLoading(true);
+        setVideoError(false);
 
         const handleCartUpdate = () => {
             loadCart();
@@ -89,11 +93,6 @@ export default function Details() {
         const token = localStorage.getItem('authToken');
         const loggedIn = !!token;
         setIsLoggedIn(loggedIn);
-        // console.log(' Login Status Check:', {
-        //     isLoggedIn: loggedIn,
-        //     hasToken: !!token,
-        //     tokenLength: token ? token.length : 0
-        // });
         return loggedIn;
     };
 
@@ -122,8 +121,6 @@ export default function Details() {
                             description: foundService.description || '',
                             categoryVideo: foundService.category?.video || null
                         });
-
-                        // console.log(' Category Video Found:', foundService.category?.video);
 
                         const sameCategoryServices = allServices.filter(s =>
                             s.category?._id === foundService.category?._id
@@ -165,7 +162,6 @@ export default function Details() {
 
                         const pageServiceIds = formattedCategoryServices.map(s => s.id);
                         setCurrentPageServiceIds(pageServiceIds);
-                        // console.log('Current page service IDs:', pageServiceIds);
                     }
                 }
             }
@@ -189,14 +185,12 @@ export default function Details() {
         try {
             const token = localStorage.getItem('authToken');
             if (!token) {
-                // console.log('No token found, cart set to null');
                 setCart(null);
                 return;
             }
 
             const response = await getCart();
             if (response.success) {
-                // console.log('Full cart loaded:', response.data);
                 setCart(response.data);
                 window.dispatchEvent(new CustomEvent('cartUpdated'));
             }
@@ -286,7 +280,6 @@ export default function Details() {
             currentPageServiceIds.includes(item.service._id)
         );
 
-        // console.log('Filtered cart items for current page:', filtered);
         return filtered;
     };
 
@@ -328,11 +321,9 @@ export default function Details() {
 
     const getVideoSource = () => {
         if (currentService?.categoryVideo) {
-            // console.log(' Using category video:', currentService.categoryVideo);
             return currentService.categoryVideo;
         }
 
-        // console.log(' No category video found, using fallback');
         return "https://content.urbancompany.com/videos/supply/customer-app-supply/1749625423509-fd8c48/1749625423509-fd8c48.m3u8";
     };
 
@@ -348,7 +339,6 @@ export default function Details() {
     };
 
     const handleLoginSuccess = () => {
-        // console.log('Login successful - updating state');
         setIsLoggedIn(true);
         checkLoginStatus();
         loadCart();
@@ -473,9 +463,18 @@ export default function Details() {
                         </div>
                     </div>
 
-                   
+                    
                     <div className="flex-1 lg:overflow-y-auto scrollbar-hide">
                         <div className="relative overflow-hidden mb-6 md:mb-10 rounded-lg">
+                            {videoLoading && !videoError && (
+                                <div className="absolute inset-0 bg-gray-200 flex items-center justify-center rounded-lg z-10">
+                                    <div className="flex flex-col items-center gap-3">
+                                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+                                        <p className="text-gray-600 text-sm">Loading video...</p>
+                                    </div>
+                                </div>
+                            )}
+                            
                             <video
                                 key={getVideoSource()}
                                 playsInline
@@ -485,7 +484,15 @@ export default function Details() {
                                 muted
                                 loop
                                 className="w-full lg:w-[63vw] rounded-lg"
-                                style={{ aspectRatio: "16 / 9" }}
+                                style={{ aspectRatio: "16 / 9", opacity: videoLoading ? 0 : 1, transition: 'opacity 0.3s ease' }}
+                                onLoadedData={() => {
+                                    setVideoLoading(false);
+                                    setVideoError(false);
+                                }}
+                                onError={() => {
+                                    setVideoError(true);
+                                    setVideoLoading(false);
+                                }}
                             >
                                 <source 
                                     src={getVideoSource()} 
@@ -494,9 +501,22 @@ export default function Details() {
                                 Your browser does not support the video tag.
                             </video>
 
-                            <div className="absolute bottom-5 left-0 w-full lg:w-[63vw] h-1 bg-gray-200 z-10">
-                                <div className="h-full bg-white animate-progress"></div>
-                            </div>
+                            {videoError && (
+                                <div className="absolute inset-0 bg-gray-100 flex items-center justify-center rounded-lg">
+                                    <div className="text-center">
+                                        <svg className="w-16 h-16 mx-auto mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                        </svg>
+                                        <p className="text-gray-600 text-sm">Unable to load video</p>
+                                    </div>
+                                </div>
+                            )}
+
+                            {!videoLoading && !videoError && (
+                                <div className="absolute bottom-5 left-0 w-full lg:w-[63vw] h-1 bg-gray-200 z-10">
+                                    <div className="h-full bg-white animate-progress"></div>
+                                </div>
+                            )}
                         </div>
 
                         

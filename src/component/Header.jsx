@@ -373,14 +373,14 @@ export default function UrbanCompanyHeader() {
                 >
                   Native
                 </NavLink>
-                {/* <NavLink
+                <NavLink
                   to="/beauty"
                   className={({ isActive }) =>
                     `text-sm font-medium ${isActive ? 'text-gray-900' : 'text-gray-500 hover:text-gray-900'}`
                   }
                 >
                   Beauty
-                </NavLink> */}
+                </NavLink>
               </nav>
             </div>
 

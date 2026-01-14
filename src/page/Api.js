@@ -140,6 +140,30 @@ export const fetchServiceById = async (serviceId) => {
   }
 };
 
+//=================slot apis===============
+
+export const getAvailableSlots = async (daysToShow = 7) => {
+  try {
+    const response = await api.get(`/timeslots/available?daysToShow=${daysToShow}`);
+    return response; 
+  } catch (error) {
+    console.error('Error fetching slots:', error);
+    throw error.response?.data || error;
+  }
+};
+
+// User - Check single slot availability
+export const checkSlotAvailability = async (slotId, date) => {
+  try {
+    const response = await api.get(`/timeslots/check?slotId=${slotId}&date=${date}`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};
+
+
+
 // ==================== CATEGORY APIs ====================
 
 /**
@@ -397,7 +421,7 @@ export const globalSearch = async (query, city = '') => {
       params.city = city;
     }
     
-    // console.log(' Searching for:', query, 'in city:', city || 'all cities');
+    console.log(' Searching for:', query, 'in city:', city || 'all cities');
     
     const response = await api.get('/search', { params });
     return response;

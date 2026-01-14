@@ -23,6 +23,7 @@ export default function ProviderForm() {
     certificate: null 
   });
 
+  const [errors, setErrors] = useState({});
   const [localityInput, setLocalityInput] = useState('');
   const [skillInput, setSkillInput] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -31,7 +32,6 @@ export default function ProviderForm() {
   const [categories, setCategories] = useState([]);
   const [loadingCategories, setLoadingCategories] = useState(true);
 
- 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -49,12 +49,51 @@ export default function ProviderForm() {
     fetchCategories();
   }, []);
 
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.experience || formData.experience === '') {
+      newErrors.experience = 'Experience is required';
+    } else if (parseInt(formData.experience) < 0) {
+      newErrors.experience = 'Experience cannot be negative';
+    } else if (parseInt(formData.experience) > 50) {
+      newErrors.experience = 'Experience cannot exceed 50 years';
+    }
+
+    if (!formData.categories) {
+      newErrors.categories = 'Please select a service category';
+    }
+
+    if (formData.skills.length === 0) {
+      newErrors.skills = 'Please add at least one skill';
+    }
+
+    if (!formData.serviceArea.city.trim()) {
+      newErrors.city = 'City is required';
+    } else if (formData.serviceArea.city.length < 2) {
+      newErrors.city = 'City name must be at least 2 characters';
+    } else if (!/^[a-zA-Z\s]+$/.test(formData.serviceArea.city)) {
+      newErrors.city = 'City name can only contain letters';
+    }
+
+    if (formData.serviceArea.localities.length === 0) {
+      newErrors.localities = 'Please add at least one locality';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: value
     }));
+    
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
   };
 
   const handleServiceAreaChange = (e) => {
@@ -66,19 +105,44 @@ export default function ProviderForm() {
         [name]: value
       }
     }));
+  
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
   };
 
   const addLocality = () => {
-    if (localityInput.trim() && !formData.serviceArea.localities.includes(localityInput.trim())) {
-      setFormData(prev => ({
-        ...prev,
-        serviceArea: {
-          ...prev.serviceArea,
-          localities: [...prev.serviceArea.localities, localityInput.trim()]
-        }
-      }));
-      setLocalityInput('');
+    const trimmedLocality = localityInput.trim();
+    
+    if (!trimmedLocality) {
+      setErrors(prev => ({ ...prev, localityInput: 'Locality cannot be empty' }));
+      return;
     }
+
+    if (trimmedLocality.length < 2) {
+      setErrors(prev => ({ ...prev, localityInput: 'Locality must be at least 2 characters' }));
+      return;
+    }
+
+    if (formData.serviceArea.localities.includes(trimmedLocality)) {
+      setErrors(prev => ({ ...prev, localityInput: 'This locality is already added' }));
+      return;
+    }
+
+    if (formData.serviceArea.localities.length >= 10) {
+      setErrors(prev => ({ ...prev, localityInput: 'Maximum 10 localities allowed' }));
+      return;
+    }
+
+    setFormData(prev => ({
+      ...prev,
+      serviceArea: {
+        ...prev.serviceArea,
+        localities: [...prev.serviceArea.localities, trimmedLocality]
+      }
+    }));
+    setLocalityInput('');
+    setErrors(prev => ({ ...prev, localityInput: '', localities: '' }));
   };
 
   const removeLocality = (locality) => {
@@ -92,13 +156,39 @@ export default function ProviderForm() {
   };
 
   const addSkill = () => {
-    if (skillInput.trim() && !formData.skills.includes(skillInput.trim().toLowerCase())) {
-      setFormData(prev => ({
-        ...prev,
-        skills: [...prev.skills, skillInput.trim().toLowerCase()]
-      }));
-      setSkillInput('');
+    const trimmedSkill = skillInput.trim().toLowerCase();
+    
+    if (!trimmedSkill) {
+      setErrors(prev => ({ ...prev, skillInput: 'Skill cannot be empty' }));
+      return;
     }
+
+    if (trimmedSkill.length < 2) {
+      setErrors(prev => ({ ...prev, skillInput: 'Skill must be at least 2 characters' }));
+      return;
+    }
+
+    if (!/^[a-z\s]+$/.test(trimmedSkill)) {
+      setErrors(prev => ({ ...prev, skillInput: 'Skill can only contain letters' }));
+      return;
+    }
+
+    if (formData.skills.includes(trimmedSkill)) {
+      setErrors(prev => ({ ...prev, skillInput: 'This skill is already added' }));
+      return;
+    }
+
+    if (formData.skills.length >= 10) {
+      setErrors(prev => ({ ...prev, skillInput: 'Maximum 10 skills allowed' }));
+      return;
+    }
+
+    setFormData(prev => ({
+      ...prev,
+      skills: [...prev.skills, trimmedSkill]
+    }));
+    setSkillInput('');
+    setErrors(prev => ({ ...prev, skillInput: '', skills: '' }));
   };
 
   const removeSkill = (skill) => {
@@ -120,6 +210,12 @@ export default function ProviderForm() {
   };
 
   const handleSubmit = async () => {
+    if (!validateForm()) {
+      setApiError('Please fill all required fields correctly');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
     setIsSubmitting(true);
     setApiError('');
 
@@ -132,24 +228,17 @@ export default function ProviderForm() {
         return;
       }
 
-      
       const formDataToSend = new FormData();
       
-     
       formDataToSend.append('businessName', formData.businessName || '');
       formDataToSend.append('experience', formData.experience || '0');
       formDataToSend.append('categories', formData.categories || '');
-      
-     
       formDataToSend.append('skills', JSON.stringify(formData.skills));
-      
-     
       formDataToSend.append('serviceArea', JSON.stringify({
         city: formData.serviceArea.city || '',
         localities: formData.serviceArea.localities || [],
         radius: formData.serviceArea.radius || 10
       }));
-      
       
       if (files.aadhar) {
         formDataToSend.append('aadhar', files.aadhar);
@@ -163,19 +252,6 @@ export default function ProviderForm() {
         formDataToSend.append('certificate', files.certificate);
       }
 
-      // console.log('Submitting provider registration...');
-      // console.log('Business Name:', formData.businessName);
-      // console.log('Experience:', formData.experience);
-      // console.log('Skills:', formData.skills);
-      // console.log('Category ID:', formData.categories);
-      // console.log('Service Area:', formData.serviceArea);
-      // console.log('Files:', {
-      //   aadhar: files.aadhar?.name,
-      //   pan: files.pan?.name,
-      //   certificate: files.certificate?.name
-      // });
-
-     
       const response = await axios.post(
         `${BASE_URL}/providers/register`,
         formDataToSend,
@@ -187,12 +263,8 @@ export default function ProviderForm() {
         }
       );
 
-      // console.log('Registration successful:', response.data);
-
       if (response.data.success) {
         setSubmitSuccess(true);
-
-        
         setTimeout(() => {
           window.location.href = '/';
         }, 2000);
@@ -203,16 +275,11 @@ export default function ProviderForm() {
     } catch (error) {
       console.error('API Error:', error);
       
-      
       if (error.response) {
-        console.error('Response data:', error.response.data);
-        console.error('Response status:', error.response.status);
         setApiError(error.response.data?.message || 'Registration failed. Please try again.');
       } else if (error.request) {
-        console.error('No response received:', error.request);
         setApiError('Network error. Please check your connection and try again.');
       } else {
-        console.error('Error:', error.message);
         setApiError('An error occurred. Please try again.');
       }
       
@@ -256,23 +323,9 @@ export default function ProviderForm() {
 
           <div className="mb-5 md:mb-6">
             <div className="space-y-3">
-              {/* <div>
-                <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-1 md:mb-2">
-                  Business Name
-                </label>
-                <input
-                  type="text"
-                  name="businessName"
-                  value={formData.businessName}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition"
-                  placeholder="Enter your business name"
-                />
-              </div> */}
-
               <div>
                 <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-1 md:mb-2">
-                  Years of Experience
+                  Years of Experience <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="number"
@@ -280,21 +333,32 @@ export default function ProviderForm() {
                   value={formData.experience}
                   onChange={handleInputChange}
                   min="0"
-                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition"
+                  max="50"
+                  className={`w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition ${
+                    errors.experience ? 'border-red-500' : 'border-gray-300'
+                  }`}
                   placeholder="e.g., 5"
                 />
+                {errors.experience && (
+                  <p className="mt-1 text-xs text-red-600 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    {errors.experience}
+                  </p>
+                )}
               </div>
 
               <div>
                 <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-1 md:mb-2">
-                  Service Category
+                  Service Category <span className="text-red-500">*</span>
                 </label>
                 <select
                   name="categories"
                   value={formData.categories}
                   onChange={handleInputChange}
                   disabled={loadingCategories}
-                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition disabled:bg-gray-100 disabled:cursor-not-allowed"
+                  className={`w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition disabled:bg-gray-100 disabled:cursor-not-allowed ${
+                    errors.categories ? 'border-red-500' : 'border-gray-300'
+                  }`}
                 >
                   <option value="">
                     {loadingCategories ? 'Loading categories...' : 'Select a category'}
@@ -305,6 +369,12 @@ export default function ProviderForm() {
                     </option>
                   ))}
                 </select>
+                {errors.categories && (
+                  <p className="mt-1 text-xs text-red-600 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    {errors.categories}
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -312,20 +382,27 @@ export default function ProviderForm() {
           <div className="mb-5 md:mb-6">
             <div>
               <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-1 md:mb-2">
-                Add Skills
+                Add Skills <span className="text-red-500">*</span>
               </label>
               <div className="flex gap-2">
                 <input
                   type="text"
                   value={skillInput}
-                  onChange={(e) => setSkillInput(e.target.value)}
+                  onChange={(e) => {
+                    setSkillInput(e.target.value);
+                    if (errors.skillInput) {
+                      setErrors(prev => ({ ...prev, skillInput: '' }));
+                    }
+                  }}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') {
                       e.preventDefault();
                       addSkill();
                     }
                   }}
-                  className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                  className={`flex-1 px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none ${
+                    errors.skillInput ? 'border-red-500' : 'border-gray-300'
+                  }`}
                   placeholder="e.g., plumbing, electrical"
                 />
                 <button
@@ -336,6 +413,18 @@ export default function ProviderForm() {
                   Add
                 </button>
               </div>
+              {errors.skillInput && (
+                <p className="mt-1 text-xs text-red-600 flex items-center gap-1">
+                  <AlertCircle className="w-3 h-3" />
+                  {errors.skillInput}
+                </p>
+              )}
+              {errors.skills && formData.skills.length === 0 && (
+                <p className="mt-1 text-xs text-red-600 flex items-center gap-1">
+                  <AlertCircle className="w-3 h-3" />
+                  {errors.skills}
+                </p>
+              )}
               
               {formData.skills.length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-2">
@@ -363,34 +452,49 @@ export default function ProviderForm() {
             <div className="space-y-3">
               <div>
                 <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-1 md:mb-2">
-                  City
+                  City <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
                   name="city"
                   value={formData.serviceArea.city}
                   onChange={handleServiceAreaChange}
-                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition"
+                  className={`w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition ${
+                    errors.city ? 'border-red-500' : 'border-gray-300'
+                  }`}
                   placeholder="e.g., Delhi, Mumbai"
                 />
+                {errors.city && (
+                  <p className="mt-1 text-xs text-red-600 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    {errors.city}
+                  </p>
+                )}
               </div>
 
               <div>
                 <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-1 md:mb-2">
-                  Localities
+                  Localities <span className="text-red-500">*</span>
                 </label>
                 <div className="flex gap-2">
                   <input
                     type="text"
                     value={localityInput}
-                    onChange={(e) => setLocalityInput(e.target.value)}
+                    onChange={(e) => {
+                      setLocalityInput(e.target.value);
+                      if (errors.localityInput) {
+                        setErrors(prev => ({ ...prev, localityInput: '' }));
+                      }
+                    }}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
                         e.preventDefault();
                         addLocality();
                       }
                     }}
-                    className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                    className={`flex-1 px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none ${
+                      errors.localityInput ? 'border-red-500' : 'border-gray-300'
+                    }`}
                     placeholder="e.g., Connaught Place"
                   />
                   <button
@@ -401,6 +505,18 @@ export default function ProviderForm() {
                     Add
                   </button>
                 </div>
+                {errors.localityInput && (
+                  <p className="mt-1 text-xs text-red-600 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    {errors.localityInput}
+                  </p>
+                )}
+                {errors.localities && formData.serviceArea.localities.length === 0 && (
+                  <p className="mt-1 text-xs text-red-600 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    {errors.localities}
+                  </p>
+                )}
                 
                 {formData.serviceArea.localities.length > 0 && (
                   <div className="mt-2 flex flex-wrap gap-2">
@@ -448,55 +564,6 @@ export default function ProviderForm() {
               </div>
             </div>
           </div>
-
-          {/* <div className="mb-5 md:mb-6">
-            <div className="space-y-3">
-              {['aadhar', 'pan', 'certificate'].map(docType => (
-                <div key={docType}>
-                  <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-1 md:mb-2 capitalize">
-                    {docType === 'aadhar' ? 'Aadhar Card' : docType === 'pan' ? 'PAN Card' : 'Certificate (Optional)'}
-                  </label>
-                  
-                  {!files[docType] ? (
-                    <label className="flex items-center justify-center w-full px-3 py-4 md:py-5 border-2 border-dashed border-gray-300 hover:border-purple-500 hover:bg-purple-50 rounded-lg cursor-pointer transition">
-                      <div className="text-center">
-                        <Upload className="w-6 h-6 md:w-8 md:h-8 mx-auto mb-1 md:mb-2 text-gray-400" />
-                        <p className="text-xs md:text-sm text-gray-600">
-                          Click to upload {docType === 'aadhar' ? 'Aadhar' : docType === 'pan' ? 'PAN' : 'Certificate'}
-                        </p>
-                        <p className="text-xs text-gray-500 mt-1">PDF, JPG, PNG (Max 5MB)</p>
-                      </div>
-                      <input
-                        type="file"
-                        onChange={(e) => handleFileChange(e, docType)}
-                        accept=".pdf,.jpg,.jpeg,.png"
-                        className="hidden"
-                      />
-                    </label>
-                  ) : (
-                    <div className="flex items-center justify-between px-3 py-2 bg-green-50 border border-green-200 rounded-lg">
-                      <div className="flex items-center gap-2 md:gap-3 min-w-0">
-                        <CheckCircle className="w-4 h-4 md:w-5 md:h-5 text-green-600 flex-shrink-0" />
-                        <div className="min-w-0 flex-1">
-                          <p className="text-xs md:text-sm font-medium text-gray-800 truncate">{files[docType].name}</p>
-                          <p className="text-xs text-gray-500">
-                            {(files[docType].size / 1024).toFixed(2)} KB
-                          </p>
-                        </div>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => removeFile(docType)}
-                        className="text-red-600 hover:text-red-800 flex-shrink-0 ml-2"
-                      >
-                        <X className="w-4 h-4 md:w-5 md:h-5" />
-                      </button>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div> */}
 
           <div className="flex items-center justify-center pt-4 md:pt-6 border-t border-gray-200">
             <button

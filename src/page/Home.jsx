@@ -279,7 +279,7 @@ export default function Home() {
       </div>
 
       <WomenSlider/>
-      <WomenSpaSlider/>
+      {/* <WomenSpaSlider/> */}
 
       <div className="w-full bg-white py-8 md:py-12">
         <div className="max-w-[1400px] mx-auto lg:px-12">
@@ -309,7 +309,7 @@ export default function Home() {
 
       <ServiceRepair/>
       <HomeRepair/>
-      <MassageMen/>
+      {/* <MassageMen/> */}
 
       <div className="w-full bg-white py-8 md:py-12">
         <div className="max-w-[1400px] mx-auto lg:px-12">
